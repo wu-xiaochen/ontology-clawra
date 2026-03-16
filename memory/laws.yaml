@@ -1,0 +1,12 @@
+# 规律库 (Laws)
+laws:
+  red_ocean_avoidance:
+    name: 红海规避法则
+    domain: 商业战略
+    statement: 当市场存在强劲竞争对手时，应寻找差异化方向
+    conditions:
+      - 市场存在已知竞品
+      - 竞品市场份额 > 20%
+    effects:
+      - 推荐垂直领域
+      - 推荐技术创新

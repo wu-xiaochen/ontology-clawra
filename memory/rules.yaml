@@ -1,0 +1,8 @@
+# 业务规则库 (Functions)
+rules:
+  strategy_red_ocean:
+    name: 红海规避规则
+    condition: AND(市场有竞品, 竞品包含[Dify,Ragflow,Bisheng])
+    action: 推荐垂直领域+本体论差异化方向
+    weight: 0.9
+    enabled: true
