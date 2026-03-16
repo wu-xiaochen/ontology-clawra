@@ -1,20 +1,17 @@
 ---
 name: ontology-clawra
-description: Palantir本体论实践版本 v3.0 - 结构化知识图谱+规则引擎+逻辑推理网络+科学推理方法论。整合对象(Objects)、关系(Links)、规则(Functions)、逻辑(Actions)，并嵌入科学推理方法论确保推理的可信度和可验证性。
+description: Palantir本体论实践版本 v3.2 - 结构化知识图谱+规则引擎+科学推理方法论。用于推理计算、选型分析、知识库查询。触发关键词：推理、选型、计算、分析、知识库、本体、燃气调压、燃气报警器。
 metadata:
   {
     "openclaw": {
       "emoji": "🧠",
-      "requires": {
-        "skills": ["proactive-agent"]
-      },
       "version": "3.2",
       "last_updated": "2026-03-16"
     }
   }
 ---
 
-# ontology-clawra v3.0
+# ontology-clawra v3.2
 
 **Palantir本体论实践版本** - Clawra的核心智能引擎 v3.0
 
