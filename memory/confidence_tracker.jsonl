@@ -1,4 +1,0 @@
-{"query": "调压箱选型", "confidence": "ASSUMED", "source": "典型场景计算", "details": {"n": 100}, "timestamp": "2026-03-16T08:24:37.132302"}
-{"query": "100户用气量", "confidence": "SPECULATIVE", "source": "估算", "details": {"method": "经验"}, "timestamp": "2026-03-16T08:24:37.132649"}
-{"query": "用户是AI创业者", "confidence": "CONFIRMED", "source": "用户输入", "details": {}, "timestamp": "2026-03-16T08:24:37.132904"}
-{"query": "100户居民小区调压箱选型", "confidence": "ASSUMED", "source": "typical_scenario", "details": {"scenarios_count": 4}, "timestamp": "2026-03-16T08:24:41.406875"}
