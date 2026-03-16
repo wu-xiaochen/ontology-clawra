@@ -1,12 +1,116 @@
-# 规律库 (Laws)
-laws:
-  red_ocean_avoidance:
-    name: 红海规避法则
-    domain: 商业战略
-    statement: 当市场存在强劲竞争对手时，应寻找差异化方向
-    conditions:
-      - 市场存在已知竞品
-      - 竞品市场份额 > 20%
-    effects:
-      - 推荐垂直领域
-      - 推荐技术创新
+# ontology-clawra 本体存储 - Laws (规律/规则)
+
+---
+# 选型与配置规则
+---
+
+law:
+  id: law_pressure_match
+  name: 压力匹配规则
+  domain: 燃气工程/选型
+  statement: 调压箱进出口压力必须与上下游管网压力匹配，严禁低压设备接入高压管网
+  conditions:
+    - 城市门站: 进1.6-4.0MPa -> 出0.4MPa
+    - 区域/工业: 进0.4-0.8MPa -> 出5-20kPa
+    - 居民小区: 进0.1-0.4MPa -> 出2-3kPa
+  effects:
+    - 居民用气出口压力: 2.5-3.0kPa
+    - 严禁: 低压设备接入高压管网
+  source: 知识库-燃气调压箱 R1
+  confidence: CONFIRMED
+
+law:
+  id: law_flow_structure
+  name: 流量结构配置规则
+  domain: 燃气工程/选型
+  statement: 根据用户类型选择合适的额定流量和调压结构
+  conditions:
+    - 居民/小商业: 额定流量50-200m³/h
+    - 大型工业: 流量>1000m³/h
+  effects:
+    - 居民/小商业结构: 1+0单路, 1+1一开一备, 2+0双路并联
+    - 大型工业结构: 2+0双路, 2+1两开一备
+    - 额定流量应不低于实际最大小时流量的1.2倍
+  source: 知识库-燃气调压箱 R2
+  confidence: CONFIRMED
+
+law:
+  id: law_environment_material
+  name: 环境材质选用规则
+  domain: 燃气工程/选型
+  statement: 根据安装环境选择合适的箱体材质
+  conditions:
+    - 沿海/高湿/化工区
+    - 北方寒冷地区
+  effects:
+    - 沿海/高湿/化工区: 选用不锈钢箱体(304)
+    - 北方寒冷地区: 配置电伴热系统
+  source: 知识库-燃气调压箱 R3
+  confidence: CONFIRMED
+
+law:
+  id: law_intelligent
+  name: 智能化配置规则
+  domain: 燃气工程/选型
+  statement: 无人值守站需配置智能通讯接口
+  effects:
+    - 配置SCADA通讯接口
+    - 支持数据远传和故障诊断
+    - 支持4G/5G/NB-IoT传输
+  source: 知识库-燃气调压箱 R4
+  confidence: CONFIRMED
+
+---
+# 业务场景特征
+---
+
+law:
+  id: law_scenario_residential
+  name: 居民小区场景特征
+  domain: 业务场景
+  statement: 居民小区调压箱选型要点
+  scenario_id: SC_01
+  tags: [低流量, 高安全性, 峰谷差大, 贴近民宅]
+  pain_points:
+    - 用气高峰低谷流量差异大(如早晚做饭)
+    - 调压器在小流量时易产生"喘振"
+    - 任何泄漏/超压易引发群体性安全担忧
+  requirements:
+    - 采用内置防喘振设计(平衡阀芯/两级调压/防喘阻尼)
+    - 具备双重超压保护(切断+放散)
+    - 响应时间快
+  source: 知识库-燃气调压箱
+  confidence: CONFIRMED
+
+law:
+  id: law_scenario_commercial
+  name: 工商业场景特征
+  domain: 业务场景
+  statement: 工商业餐饮调压箱选型要点
+  scenario_id: SC_02
+  tags: [负荷波动大, 可靠性要求高]
+  pain_points:
+    - 用气设备启停频繁导致压力冲击
+    - 商业体停气影响大
+  requirements:
+    - 选择响应速度快(≤300ms)的调压器
+    - 首选2+1或2+0多用配置
+    - 单路故障时备用路自动切入
+  source: 知识库-燃气调压箱
+  confidence: CONFIRMED
+
+law:
+  id: law_scenario_industrial
+  name: 工业园区场景特征
+  domain: 业务场景
+  statement: 工业园区调压箱选型要点
+  scenario_id: SC_03
+  tags: [大流量, 连续供气, 腐蚀性环境]
+  pain_points:
+    - 停气会导致生产事故
+    - 腐蚀性环境
+  requirements:
+    - 选N+1或2+0冗余结构
+    - 不锈钢材质或喷塑涂层
+  source: 知识库-燃气调压箱
+  confidence: CONFIRMED

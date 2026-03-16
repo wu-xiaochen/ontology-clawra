@@ -1,0 +1,87 @@
+# ontology-clawra 本体存储 - Concepts (概念)
+
+---
+# 燃气调压箱核心概念
+---
+
+concept:
+  id: concept_gas_regulator
+  name: 燃气调压箱
+  definition: 一种将燃气调压器、紧急切断阀、放散阀、过滤器、压力仪表、流量计及控制系统等部件集成在金属箱体内的成套设备
+  category: 设备定义
+  properties:
+    功能: 将上游高压/中压燃气降至下游中压/低压
+    形态区分:
+      - 楼栋调压箱: 壁挂外墙，单栋/相邻楼宇供气
+      - 落地调压柜: 落地安装，服务小区/工商业/工业用户
+  source: 知识库-燃气调压箱
+  confidence: CONFIRMED
+  created_at: 2026-03-16
+
+concept:
+  id: concept_import_pressure
+  name: 进口压力
+  definition: 设备允许接入的上游管网压力范围
+  notation: P1
+  unit: MPa
+  common_values: [0.01, 0.1, 0.2, 0.4, 0.8, 1.6, 4.0]
+  source: GB 27791
+  confidence: CONFIRMED
+
+concept:
+  id: concept_export_pressure
+  name: 出口压力
+  definition: 经设备调节后输出的压力范围
+  notation: P2
+  unit: kPa
+  common_values: [2.5, 3.0, 5.0, 20.0]
+  source: GB 27791
+  confidence: CONFIRMED
+
+concept:
+  id: concept_rated_flow
+  name: 额定流量
+  definition: 基准状态下，调压箱每路出口在最低进口压力、声明设定出口压力情况下通过的最大气体流量
+  notation: Q
+  unit: Nm³/h
+  common_values: [50, 100, 150, 200, 300, 500, 700, 800, 1000, 1200, 1500, 2000, 2500, 3000, 5000]
+  source: GB 27791
+  confidence: CONFIRMED
+
+concept:
+  id: concept_stability_accuracy
+  name: 稳压精度
+  definition: 出口压力实际值与设定值的偏差范围
+  requirement: "≤±10% 或 ±15%（视等级而定）"
+  source: GB 27790
+  confidence: CONFIRMED
+
+concept:
+  id: concept_shutoff_pressure
+  name: 关闭压力
+  definition: 流量为零时，调压器关闭后的出口密封压力
+  notation: SG
+  ratio: 通常为设定压力的1.1-1.25倍
+  source: GB 27790
+  confidence: CONFIRMED
+
+concept:
+  id: concept_cutoff_pressure
+  name: 切断压力
+  definition: 当出口压力异常升高达到设定值时，切断阀自动关闭的压力值
+  ratio: "10KPa<P2≤80KPa时，为1.5倍P2"
+  response_time: "≤2秒"
+  source: GB 27791
+  confidence: CONFIRMED
+
+concept:
+  id: concept_structure_form
+  name: 结构形式
+  definition: 调压通路的数量与配置
+  options:
+    - "1+0: 单路调压"
+    - "1+1: 一开一备"
+    - "2+0: 双路运行"
+    - "2+1: 两开一备"
+  source: GB 27791
+  confidence: CONFIRMED

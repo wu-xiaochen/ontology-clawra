@@ -1,0 +1,201 @@
+# ontology-clawra 本体存储 - Objects (实体)
+
+---
+# 规格型号
+---
+
+object:
+  id: obj_rated_flow_50
+  type: 规格
+  name: 额定流量-50m³/h
+  category: 额定流量
+  value: 50
+  unit: Nm³/h
+ 适用场景: 居民楼栋(20-30户)
+
+object:
+  id: obj_rated_flow_100
+  type: 规格
+  name: 额定流量-100m³/h
+  category: 额定流量
+  value: 100
+  unit: Nm³/h
+ 适用场景: 居民楼栋(50-80户)
+
+object:
+  id: obj_rated_flow_200
+  type: 规格
+  name: 额定流量-200m³/h
+  category: 额定流量
+  value: 200
+  unit: Nm³/h
+ 适用场景: 居民小区(100-150户)/小型商业
+
+object:
+  id: obj_pipe_dn50
+  type: 规格
+  name: 管径-DN50
+  category: 进出口管径
+  value: DN50
+  常见于: 居民楼栋调压箱
+
+object:
+  id: obj_pipe_dn80
+  type: 规格
+  name: 管径-DN80
+  category: 进出口管径
+  value: DN80
+  常见于: 落地调压柜/中型商业
+
+object:
+  id: obj_pipe_dn100
+  type: 规格
+  name: 管径-DN100
+  category: 进出口管径
+  value: DN100
+  常见于: 大型调压站
+
+---
+# 供应商梯队
+---
+
+object:
+  id: obj_supplier_tier1
+  type: 供应商
+  name: 第一梯队
+  category: 供应商评价
+  examples: [费希尔久安, 飞奥]
+  特点:
+    - 技术领先
+    - 产品线全
+    - 服务网络覆盖全
+    - 可靠性高
+    - 具备CNAS认证实验室
+  适用: 高端项目/关键设施
+
+object:
+  id: obj_supplier_tier2
+  type: 供应商
+  name: 第二梯队
+  category: 供应商评价
+  examples: [特瑞斯, 春晖, 永良]
+  特点:
+    - 技术稳定
+    - 性价比高
+    - 服务响应快
+    - 市场主流
+  适用: 大多数项目
+
+object:
+  id: obj_supplier_tier3
+  type: 供应商
+  name: 第三梯队
+  category: 供应商评价
+  特点:
+    - 核心部件外购
+    - 仅具备集成能力
+    - 价格有竞争力
+  风险: 需严格考察质量控制能力
+
+---
+# 价格区间
+---
+
+object:
+  id: obj_price_residential
+  type: 价格
+  name: 居民楼栋调压箱价格
+  category: 价格参考
+  规格: "流量≤100Nm³/h, 进/出口压力: 中-低压"
+  配置: "不锈钢箱体, 单路机械调压, 基础安全装置"
+  price_range:
+    国产: "1,600-3,000元/台套"
+    进口: "5,000-15,000元/台套"
+  影响因素:
+    - 不锈钢板材价格波动
+    - 调压器品牌与材质
+    - 采购批量
+
+object:
+  id: obj_price_ground_cabinet
+  type: 价格
+  name: 落地式调压柜价格
+  category: 价格参考
+  规格: "流量100-1000Nm³/h, 中-中压或中-低压"
+  配置: "碳钢喷涂箱体, 单路或双路调压, 切断阀, 放散阀"
+  price_range: "15,000-60,000元/台套"
+  影响因素:
+    - 钢材价格
+    - 调压阀与切断阀规格品牌
+    - 阀门材质
+    - 工艺复杂度
+
+object:
+  id: obj_price_region
+  type: 价格
+  name: 区域调压站价格
+  category: 价格参考
+  规格: "流量>1000Nm³/h, 高-中压或中-中压"
+  配置: "撬装或箱式, 双路或多路调压, 高级监控"
+  price_range: "150,000-500,000+元/台套"
+  影响因素:
+    - 大型阀门与管件成本
+    - 控制系统等级
+    - 防爆与安全认证
+    - 工程设计费
+
+object:
+  id: obj_price_intelligent
+  type: 价格
+  name: 智能调压箱附加价格
+  category: 价格参考
+  配置: "物联网RTU, 压力/流量/泄漏传感器, 远程控制, 云平台"
+  price_range: "基础价 + 15,000-50,000+元"
+  影响因素:
+    - 物联网通信模组与资费
+    - 传感器精度与防爆等级
+    - 数据平台开发与年服务费
+
+---
+# 质量检验指标
+---
+
+object:
+  id: obj_qc_stability
+  type: 质量标准
+  name: 稳压精度检验
+  category: 性能指标
+  要求: "≤±10% 或 ±15%(视等级而定)"
+  红线: "稳压精度超出设计要求"
+
+object:
+  id: obj_qc_shutoff
+  type: 质量标准
+  name: 关闭压力检验
+  category: 性能指标
+  要求: "通常为设定压力的1.1-1.25倍"
+  红线: "关闭后压力持续爬升(内漏)"
+
+object:
+  id: obj_qc_cutoff_time
+  type: 质量标准
+  name: 切断响应时间
+  category: 性能指标
+  要求: "≤2秒"
+  红线: "紧急情况不动作或动作迟缓"
+
+object:
+  id: obj_qc_material
+  type: 质量标准
+  name: 阀体材质要求
+  category: 材料质量
+  合规: "QT450-10, 铝合金, 铸钢"
+  黑名单: "严禁使用灰铸铁(HT200)"
+
+object:
+  id: obj_qc_coating
+  type: 质量标准
+  name: 漆膜厚度要求
+  category: 材料质量
+  要求: "喷塑≥60μm"
+  红线: "漆膜过薄/流挂/漏喷"
