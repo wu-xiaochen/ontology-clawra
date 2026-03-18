@@ -1,0 +1,12 @@
+# 私有数据 - 不上传到GitHub
+memory/
+scenarios/
+references/
+
+# 评估数据 - 可能包含测试案例
+eval/
+evals/
+
+# 本地脚本
+scripts/local/
+*.local.yaml
