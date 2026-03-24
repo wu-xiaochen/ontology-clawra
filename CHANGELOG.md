@@ -1,5 +1,42 @@
 # ontology-clawra 版本变更记录
 
+## v3.9 (2026-03-24) - GitHub Top20冲刺引擎
+
+### 新增功能
+- ✅ **GitHub Top20冲刺框架**：完整的方法论+大臣协调机制
+- ✅ **Event Router v3.9**：支持GitHub/Starring工作流和社区里程碑事件
+- ✅ **大臣协调体系**：CEO/PM/CTO/太子四臣协调协议
+- ✅ **置信度校准v2**：来源可信度+时效性+领域相关性三维校准
+- ✅ **多repo协同支持**：支持ontology-platform等项目协同运营
+
+### 大臣体系
+- 三省六部配置（GitHub Top20冲刺专用）
+- 并发控制（最多3个大臣并发）
+- GitHub Stars里程碑追踪
+- 飞书汇报机制
+
+### GitHub Top20方法论
+- Phase 1（Day1-3）：CI+README+v0.9发布
+- Phase 2（Day4-7）：Reddit/HN/Twitter爆发
+- Phase 3（Day8-14）：持续增长+社区运营
+
+---
+
+## v3.8 (2026-03-20) - Skill协同生态
+
+### 新增功能
+- ✅ Skill协同生态架构
+- ✅ Event Router模块（统一进化记忆层）
+- ✅ 7个Skill角色定义
+- ✅ Phase 3行动计划
+
+### 协调架构
+- 用户交互 → Event Router → 能力Skill → 执行Skill
+- 事件类型：improvement_found/error_corrected/prediction/reasoning_triggered
+- status流转：pending → in_review → resolved/rejected
+
+---
+
 ## v3.1 (2026-03-16) - 科学推理方法论增强版
 
 ### 新增功能
@@ -14,12 +51,6 @@
 - 支持典型场景快速匹配
 - 支持置信度自动追踪
 - 支持用户反馈闭环
-
-### 测试验证
-- ✅ typical_scenarios.py 测试通过
-- ✅ confidence_tracker.py 测试通过
-- ✅ main.py 推理引擎测试通过
-- ✅ 调压箱选型场景测试通过
 
 ---
 
