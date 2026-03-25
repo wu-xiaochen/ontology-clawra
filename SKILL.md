@@ -19,7 +19,7 @@ metadata:
   {
     "openclaw": {
       "emoji": "🧠",
-      "version": "5.0.0",
+      "version": "5.0.2",
       "last_updated": "2026-03-25",
       "changelog": [
         "v5.0.0: Removed GitHub sprint-related descriptions; clarified localization design",
