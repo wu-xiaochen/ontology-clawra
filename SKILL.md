@@ -1,20 +1,19 @@
 ---
 name: ontology-clawra
 description: |
-  ontology-clawra v5.0 - 本地本体推理引擎 + GitHub Top20冲刺辅助。
+  ontology-clawra v5.0 - Local Ontology Reasoning Engine
 
-  **实际功能**：本地化的结构化推理引擎 + 置信度管理 + 自动学习。
-  读取用户workspace记忆文件用于上下文，不包含跨skill调度或网络通信。
+  A local structured reasoning engine with confidence management and automatic learning.
+  Reads user workspace memory files for context. No cross-skill scheduling or network communication.
 
-  **核心能力**：
-  - 本体知识图谱存储与推理
-  - 置信度计算与自知（元认知）
-  - 本地记忆搜索与规则学习
-  - GitHub项目（ontology-platform）冲刺辅助
+  Core Capabilities:
+  - Ontology knowledge graph storage and reasoning
+  - Confidence calculation and meta-cognition
+  - Local memory search and rule learning
 
-  **文件访问范围**：仅读写 ~/.openclaw/skills/ontology-clawra/memory/ 下的本体文件；
-  仅读取 ~/.openclaw/workspace/memory/*.md 用于上下文检索。
-  无跨skill调度、无自动网络请求。
+  File Access: Read/write only ~/.openclaw/skills/ontology-clawra/memory/ for ontology files;
+  Read only ~/.openclaw/workspace/memory/*.md for user context.
+  No cross-skill scheduling, no automatic network requests.
 
 metadata:
   {
@@ -23,131 +22,127 @@ metadata:
       "version": "5.0.0",
       "last_updated": "2026-03-25",
       "changelog": [
-        "v3.9.0: 新增GitHub Top20冲刺框架；移除夸大的协调中枢描述；明确本地化设计",
-        "v3.8.0: 新增Skill协同生态（文档层面）",
-        "v3.7.0: 启用自动学习"
+        "v5.0.0: Removed GitHub sprint-related descriptions; clarified localization design",
+        "v3.8.0: Added Skill ecosystem documentation",
+        "v3.7.0: Enabled automatic learning"
       ]
     }
   }
 ---
 
-# ontology-clawra v5.0 - 本地本体推理引擎
+# ontology-clawra v5.0 - Local Ontology Reasoning Engine
 
-## 一、核心定位（准确描述）
+## 1. Core定位 (Accurate Description)
 
-**这是一个本地推理引擎，不是跨skill协调器。**
-
-```
-实际能力：
-✅ 本地本体知识图谱存储与推理
-✅ 置信度计算与自知（元认知）
-✅ 本地记忆文件搜索
-✅ 自动学习（写入本地memory目录）
-✅ GitHub Top20冲刺战略辅助（通过spawn大臣）
-
-实际限制：
-❌ 不调度其他skills（无Event Router）
-❌ 不执行跨skill通信
-❌ 无自动网络请求
-❌ 无agent-to-agent RPC
-```
-
-## 二、文件访问权限
-
-| 操作 | 路径 | 说明 |
-|------|------|------|
-| 读 | `~/.openclaw/skills/ontology-clawra/memory/` | 本体文件 |
-| 读 | `~/.openclaw/workspace/memory/*.md` | 用户上下文 |
-| 写 | `~/.openclaw/skills/ontology-clawra/memory/` | 学习结果 |
-| 写 | GitHub（via git push） | 需用户确认 |
-| ❌ | 其他目录 | 从不访问 |
-
-**网络行为**：
-- 无自动网络请求
-- network_fetch.py 仅搜索本地文件，返回获取建议
-- 无 requests/sockets/subprocess 外部调用
-
-## 三、核心推理能力
-
-### 置信度等级
-
-- `CONFIRMED`：多来源验证，可信
-- `ASSUMED`：单来源，需要用户确认
-- `SPECULATIVE`：高不确定性，标注假设
-
-### 推理输出格式
+**This is a local reasoning engine, not a cross-skill coordinator.**
 
 ```
-## 推理结果
+Actual Capabilities:
+✅ Local ontology knowledge graph storage and reasoning
+✅ Confidence calculation and meta-cognition
+✅ Local memory file search
+✅ Automatic learning (write to local memory directory)
 
-### 用户需求
-[原文转述]
-
-### 规则依据
-- Rule-Law-[ID]：[规则内容]
-
-### 推理过程
-[具体推导步骤]
-
-### 置信度标注
-| 结论 | 置信度 | 依据 |
-|------|--------|------|
-| [结论] | CONFIRMED/ASSUMED/SPECULATIVE | [依据] |
+Actual Limitations:
+❌ No skill scheduling (no Event Router)
+❌ No cross-skill communication
+❌ No automatic network requests
+❌ No agent-to-agent RPC
 ```
 
-## 四、本体文件格式
+## 2. File Access Permissions
 
-**目录**：`~/.openclaw/skills/ontology-clawra/memory/`
+| Operation | Path | Description |
+|-----------|------|-------------|
+| Read | `~/.openclaw/skills/ontology-clawra/memory/` | Ontology files |
+| Read | `~/.openclaw/workspace/memory/*.md` | User context |
+| Write | `~/.openclaw/skills/ontology-clawra/memory/` | Learning results |
+| Write | GitHub (via git push) | Requires user confirmation |
+| ❌ | Other directories | Never accessed |
 
-| 文件 | 用途 |
-|------|------|
-| `graph.jsonl` | 实体（Concept/Entity）|
-| `rules.yaml` | 规则（Rule/Law）|
-| `laws.yaml` | 规律（归纳性规律）|
-| `confidence_tracker.jsonl` | 置信度追踪 |
-| `reasoning.jsonl` | 推理日志 |
+**Network Behavior**:
+- No automatic network requests
+- network_fetch.py only searches local files, returns acquisition suggestions
+- No requests/sockets/subprocess external calls
 
-## 五、自动学习
+## 3. Core Reasoning Capabilities
 
-### 触发条件
+### Confidence Levels
 
-| 事件 | 动作 | 写入位置 |
-|------|------|---------|
-| 用户确认推理正确 | 抽取到本体 | `graph.jsonl` |
-| 置信度可升级 | 更新置信度 | `confidence_tracker.jsonl` |
-| 推理失败 | 建议补充本体 | 仅提示 |
+- `CONFIRMED`: Multi-source verified, trustworthy
+- `ASSUMED`: Single source, requires user confirmation
+- `SPECULATIVE`: High uncertainty, assumptions marked
 
-### 写入规则
+### Reasoning Output Format
 
-- 所有写操作前告知用户
-- 仅写入 `~/.openclaw/skills/ontology-clawra/memory/`
-- 不上传任何数据到外部服务
+```
+## Reasoning Result
 
-## 六、安全声明
+### User Requirement
+[Paraphrased original text]
 
-1. **无外部网络调用**：代码不包含 requests/urllib/sockets 外部调用
-2. **无凭据访问**：不读取环境变量或API keys
-3. **隐私隔离**：workspace记忆文件仅用于上下文，不同步
-4. **本地化**：所有学习结果仅存储在本地memory目录
+### Rule Basis
+- Rule-Law-[ID]: [Rule content]
 
-## 七、GitHub Top20 冲刺辅助
+### Reasoning Process
+[Specific derivation steps]
 
-ontology-clawra 提供战略推理能力，帮助制定GitHub项目冲刺计划。
-大臣体系通过OpenClaw标准subagent机制工作，非本skill直接调度。
+### Confidence Annotation
+| Conclusion | Confidence | Basis |
+|------------|------------|-------|
+| [Conclusion] | CONFIRMED/ASSUMED/SPECULATIVE | [Basis] |
+```
 
-## 八、版本历史
+## 4. Ontology File Format
 
-| 版本 | 日期 | 说明 |
-|------|------|------|
-| v3.9 | 2026-03-24 | 移除夸大描述，明确本地化设计 |
-| v3.8 | 2026-03-20 | 新增Skill协同文档 |
-| v3.7 | 2026-03-16 | 启用自动学习 |
-| v3.6 | 2026-03-16 | 初始版本 |
+**Directory**: `~/.openclaw/skills/ontology-clawra/memory/`
 
-## 九、已支持领域本体
+| File | Purpose |
+|------|---------|
+| `graph.jsonl` | Entities (Concept/Entity) |
+| `rules.yaml` | Rules (Rule/Law) |
+| `laws.yaml` | Patterns (inductive patterns) |
+| `confidence_tracker.jsonl` | Confidence tracking |
+| `reasoning.jsonl` | Reasoning log |
 
-供应链采购、医疗健康、金融银行、网络安全、汽车制造、
-人力资源、摄影技术、家具家居、养老服务、育儿教育、
-茶叶文化、搬家服务、约会恋爱、航空航天等54+领域。
+## 5. Automatic Learning
 
-各领域本体位于：`~/.openclaw/skills/ontology-clawra/memory/` 对应yaml文件。
+### Trigger Conditions
+
+| Event | Action | Write Location |
+|-------|--------|----------------|
+| User confirms reasoning is correct | Extract to ontology | `graph.jsonl` |
+| Confidence can be upgraded | Update confidence | `confidence_tracker.jsonl` |
+| Reasoning fails | Suggest ontology addition | Prompt only |
+
+### Write Rules
+
+- Inform user before all write operations
+- Write only to `~/.openclaw/skills/ontology-clawra/memory/`
+- Do not upload any data to external services
+
+## 6. Security Statement
+
+1. **No external network calls**: Code contains no requests/urllib/sockets external calls
+2. **No credential access**: Does not read environment variables or API keys
+3. **Privacy isolation**: Workspace memory files used only for context, not synced
+4. **Localization**: All learning results stored only in local memory directory
+
+## 7. Version History
+
+| Version | Date | Description |
+|---------|------|-------------|
+| v5.0 | 2026-03-25 | Removed GitHub sprint-related descriptions |
+| v3.9 | 2026-03-24 | Removed exaggerated descriptions, clarified localization |
+| v3.8 | 2026-03-20 | Added Skill ecosystem documentation |
+| v3.7 | 2026-03-16 | Enabled automatic learning |
+| v3.6 | 2026-03-16 | Initial version |
+
+## 8. Supported Domain Ontologies
+
+Supply chain procurement, healthcare, finance banking, cybersecurity,
+automotive manufacturing, human resources, photography, furniture,
+elderly care, childcare, tea culture, moving services, dating,
+aerospace, and 50+ domains.
+
+Ontology files located in: corresponding yaml files under `~/.openclaw/skills/ontology-clawra/memory/`

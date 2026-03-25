@@ -1,42 +1,42 @@
-# ontology-clawra 安装说明
+# ontology-clawra Installation Guide
 
-## 概述
+## Overview
 
-| 项目 | 说明 |
-|------|------|
-| 版本 | v3.9.0 |
-| 类型 | 本地推理引擎（非跨skill调度器） |
-| 依赖 | Python 3.9+, OpenClaw |
-| 网络 | 无自动网络请求 |
+| Item | Description |
+|------|-------------|
+| Version | v5.0.0 |
+| Type | Local reasoning engine (not cross-skill scheduler) |
+| Dependencies | Python 3.9+, OpenClaw |
+| Network | No automatic network requests |
 
-## 安装方式
+## Installation
 
 ```bash
-# 方式1: 通过 ClawHub 安装
+# Method 1: Install via ClawHub
 clawhub install ontology-clawra
 
-# 方式2: 手动安装
+# Method 2: Manual installation
 git clone https://github.com/wu-xiaochen/ontology-clawra.git
 ```
 
-## 文件访问权限
+## File Access Permissions
 
-| 访问 | 路径 | 说明 |
-|------|------|------|
-| 读 | `~/.openclaw/skills/ontology-clawra/memory/` | 本体知识库 |
-| 读 | `~/.openclaw/workspace/memory/*.md` | 用户上下文 |
-| 写 | `~/.openclaw/skills/ontology-clawra/memory/` | 学习结果 |
+| Access | Path | Description |
+|--------|------|-------------|
+| Read | `~/.openclaw/skills/ontology-clawra/memory/` | Ontology knowledge base |
+| Read | `~/.openclaw/workspace/memory/*.md` | User context |
+| Write | `~/.openclaw/skills/ontology-clawra/memory/` | Learning results |
 
-## 安全边界
+## Security Boundaries
 
-- ✅ 无自动网络请求
-- ✅ 无凭据访问
-- ✅ 默认不启用自动写入
-- ✅ 写入本体必须用户确认
-- ✅ 不上传用户数据到任何服务器
+- ✅ No automatic network requests
+- ✅ No credential access
+- ✅ Auto-write disabled by default
+- ✅ Ontology write requires user confirmation
+- ✅ No user data uploaded to any server
 
-## 版本
+## Version
 
-- SKILL.md: v3.9.0
-- CHANGELOG.md: v3.9 (2026-03-24)
+- SKILL.md: v5.0.0
+- CHANGELOG.md: v5.0 (2026-03-25)
 - GitHub: https://github.com/wu-xiaochen/ontology-clawra

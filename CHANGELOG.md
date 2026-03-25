@@ -1,54 +1,52 @@
-# ontology-clawra 版本变更记录
+# ontology-clawra Changelog
 
-## v5.0 (2026-03-25) - 全能自包含进化引擎
+## v5.0 (2026-03-25) - All-in-One Self-Contained Evolution Engine
 
-### 重大升级
-- **合并 capability-evolver**：整合错误分析、自我修复、规则学习、主动优化
-- **重构为严格逻辑引擎**：IF-THEN规则 + 贝叶斯置信度
-- **零依赖设计**：纯Python标准库
+### Major Upgrades
+- **Merged capability-evolver**: Integrated error analysis, self-repair, rule learning, proactive optimization
+- **Refactored as strict logic engine**: IF-THEN rules + Bayesian confidence
+- **Zero dependencies**: Pure Python standard library
 
-### 核心能力
-- 推理引擎：置信度计算、证据链追溯
-- 错误分析器：日志扫描、失败模式提取
-- 自我修复：代码生成 + 风险评估
-- 规则学习：从成功案例抽取规则
-- 元认知：知识边界检测
-- 规则演化：新证据→规则更新
+### Core Capabilities
+- Reasoning engine: Confidence calculation, evidence chain tracing
+- Error analyzer: Log scanning, failure pattern extraction
+- Self-repair: Code generation + risk assessment
+- Rule learning: Extract rules from success cases
+- Metacognition: Knowledge boundary detection
+- Rule evolution: New evidence → rule updates
 
 ---
 
-# ontology-clawra 版本变更记录
+## v3.9 (2026-03-24) - Security Description Fix
 
-## v3.9 (2026-03-24) - 修复安全描述问题
+### Security Fixes
+- **Removed exaggerated descriptions**: Original description claimed "cross-skill coordination hub", actual is local reasoning engine
+- **Clarified file access**: Clearly listed read/write permission scopes
+- **Network behavior transparency**: Explicitly declared no automatic network requests
+- **Write confirmation**: All write operations require user confirmation
 
-### 安全修复
-- **移除夸大描述**：原描述声称"跨skill协调中枢"，实际为本地推理引擎
-- **明确文件访问**：清晰列出读/写权限范围
-- **网络行为透明**：明确声明无自动网络请求
-- **写入规则确认**：所有写操作必须用户确认
-
-### 版本一致性修复
+### Version Consistency Fix
 - SKILL.md metadata: v3.9.0
 - CHANGELOG: v3.9 (2026-03-24)
 
 ---
 
-## v3.8 (2026-03-20) - Skill协同文档
+## v3.8 (2026-03-20) - Skill Ecosystem Documentation
 
-### 新增
-- Skill协同生态架构文档
-- 7个Skill角色定义（供参考）
-
----
-
-## v3.7 (2026-03-16) - 自动学习
-
-### 新增
-- 本体自动学习能力
-- 置信度追踪
+### Added
+- Skill ecosystem architecture documentation
+- 7 Skill role definitions (for reference)
 
 ---
 
-## v3.6 (2026-03-16) - 初始发布
+## v3.7 (2026-03-16) - Automatic Learning
 
-- 初始版本
+### Added
+- Ontology automatic learning capability
+- Confidence tracking
+
+---
+
+## v3.6 (2026-03-16) - Initial Release
+
+- Initial release

@@ -5,7 +5,7 @@ ontology-clawra Skill 自评估脚本
 
 import os
 
-SKILL_PATH = "/Users/xiaochenwu/.openclaw/skills/ontology-clawra"
+SKILL_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 def test_structure():
     """测试skill结构"""
