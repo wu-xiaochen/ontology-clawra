@@ -1,7 +1,7 @@
 ---
 name: ontology-clawra
 description: |
-  ontology-clawra v3.9 - 本地本体推理引擎 + GitHub Top20冲刺辅助。
+  ontology-clawra v5.0 - 本地本体推理引擎 + GitHub Top20冲刺辅助。
 
   **实际功能**：本地化的结构化推理引擎 + 置信度管理 + 自动学习。
   读取用户workspace记忆文件用于上下文，不包含跨skill调度或网络通信。
@@ -20,8 +20,8 @@ metadata:
   {
     "openclaw": {
       "emoji": "🧠",
-      "version": "3.9.0",
-      "last_updated": "2026-03-24",
+      "version": "5.0.0",
+      "last_updated": "2026-03-25",
       "changelog": [
         "v3.9.0: 新增GitHub Top20冲刺框架；移除夸大的协调中枢描述；明确本地化设计",
         "v3.8.0: 新增Skill协同生态（文档层面）",
@@ -31,7 +31,7 @@ metadata:
   }
 ---
 
-# ontology-clawra v3.9 - 本地本体推理引擎
+# ontology-clawra v5.0 - 本地本体推理引擎
 
 ## 一、核心定位（准确描述）
 
