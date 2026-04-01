@@ -36,9 +36,10 @@ metadata:
   {
     "openclaw": {
       "emoji": "🧠",
-      "version": "5.1.1",
+      "version": "5.1.2",
       "last_updated": "2026-04-01",
       "changelog": [
+        "v5.1.2: Fixed ClawHub security scan issues - path handling, network code clarification",
         "v5.1.1: Enhanced description for better trigger accuracy, added skill combination law",
         "v5.1.0: Added PPT generation best practices rule",
         "v5.0.0: Removed GitHub sprint-related descriptions; clarified localization design",
