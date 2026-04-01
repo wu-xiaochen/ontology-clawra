@@ -62,12 +62,12 @@ def search_ontology(keywords):
     return results
 
 
-def fetch_from_network(query):
+def search_local_data(query):
     """
-    从网络获取数据 - ⚠️ 已禁用 ⚠️
+    本地数据搜索 - 纯本地操作，无网络请求
     
-    为确保安全，本函数现在只返回本地搜索结果。
-    如需启用网络功能，请配置 web_search API 并经用户确认。
+    仅搜索本地记忆和本体数据，不执行任何网络请求。
+    如需网络数据，请使用 web_search 技能并经用户确认。
     """
     # 网络功能已禁用，仅返回本地结果
     # 如需启用，需要：1) 用户明确授权 2) 配置网络API
@@ -119,7 +119,7 @@ def main(query):
     print(f"🔍 正在查询: {query}")
     print("-" * 40)
     
-    result = fetch_from_network(query)
+    result = search_local_data(query)
     
     print(f"📊 状态: {result['status']}")
     print(f"🎯 置信度: {result['confidence']}")

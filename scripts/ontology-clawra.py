@@ -12,9 +12,14 @@ import re
 from datetime import datetime
 from pathlib import Path
 
-# 配置
+# 配置 - 使用用户目录下的标准路径，符合 ClawHub 安全要求
 BASE_DIR = Path(__file__).parent
-MEMORY_DIR = BASE_DIR / "memory"
+# 优先使用用户目录，符合 SKILL.md 声明的路径
+USER_MEMORY_DIR = Path.home() / ".openclaw" / "skills" / "ontology-clawra" / "memory"
+# 回退到技能包目录（用于开发测试）
+PACKAGE_MEMORY_DIR = BASE_DIR / "memory"
+# 使用用户目录（如果可写），否则使用包目录
+MEMORY_DIR = USER_MEMORY_DIR if USER_MEMORY_DIR.parent.parent.parent.exists() else PACKAGE_MEMORY_DIR
 GRAPH_FILE = MEMORY_DIR / "graph.jsonl"
 DECISIONS_FILE = MEMORY_DIR / "decisions.jsonl"
 REASONING_FILE = MEMORY_DIR / "reasoning.jsonl"

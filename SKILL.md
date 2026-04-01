@@ -3,30 +3,34 @@ name: ontology-clawra
 description: |
   🧠 ontology-clawra v5.1 - Local Ontology Reasoning & Learning Engine
 
-  **USE THIS SKILL WHENEVER** you need structured reasoning, knowledge graph management, 
-  logical inference, or automatic learning from interactions. This is your go-to tool for:
-  
+  **USE THIS SKILL WHENEVER** you need structured reasoning, knowledge graph management,
+  logical inference, or learning from interactions. This is your go-to tool for:
+
   - Building and querying ontology knowledge graphs (concepts, entities, relationships)
   - Performing confidence-based reasoning with evidence tracking
-  - Extracting rules and patterns from successful workflows
-  - Meta-cognition and self-reflection on AI decision-making
-  - Learning from each session and evolving knowledge over time
-  
+  - Recording insights and patterns from completed tasks
+  - Local memory search and knowledge retrieval
+
   **Key Use Cases:**
   - Before making complex decisions: "Let me use ontology-clawra to reason about this"
   - After completing tasks: "Record this learning to ontology-clawra"
   - Building domain expertise: "Create concepts for [domain] in ontology-clawra"
   - Analyzing patterns: "Query ontology-clawra for similar past cases"
-  
+
   **Core Capabilities:**
-  ✅ Local ontology storage (graph.jsonl, rules.yaml, laws.yaml)
+  ✅ Local ontology storage in `~/.openclaw/skills/ontology-clawra/memory/`
   ✅ Confidence calculation (CONFIRMED/ASSUMED/SPECULATIVE)
-  ✅ Automatic learning from user confirmations
-  ✅ Rule extraction and evolution
-  ✅ Metacognition and knowledge boundary detection
-  
-  **Always use this skill** when the user mentions learning, reasoning, ontology, 
-  knowledge graphs, rule extraction, or when you need to record insights from completed work.
+  ✅ Learning from user confirmations
+  ✅ Local memory search (no network requests)
+  ✅ Rule-based reasoning engine
+
+  **Security Note:**
+  - All data stored locally, no external network requests
+  - File operations restricted to user's home directory
+  - No credential access or environment variable reading
+
+  **Always use this skill** when the user mentions learning, reasoning, ontology,
+  knowledge graphs, or when you need to record insights from completed work.
 
 metadata:
   {
