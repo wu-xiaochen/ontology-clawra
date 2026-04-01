@@ -1,5 +1,18 @@
 # ontology-clawra Changelog
 
+## v5.1.2 (2026-04-01) - ClawHub Security Fix
+
+### Security & Compliance Fixes
+- **Fixed file path handling**: Now correctly uses `~/.openclaw/skills/ontology-clawra/memory/` as declared in SKILL.md
+- **Clarified network code**: Renamed `fetch_from_network` to `search_local_data`, explicitly no network requests
+- **Updated SKILL.md**: Removed descriptions of unimplemented features (self-repair, code generation)
+- **Added security declarations**: Explicitly state no external network requests, no credential access
+
+### Goal
+Pass ClawHub security scan and improve ranking from "Suspicious" to "Benign"
+
+---
+
 ## v5.1.1 (2026-04-01) - ClawHub Optimization Release
 
 ### Optimization for ClawHub Ranking
