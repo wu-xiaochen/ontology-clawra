@@ -1,5 +1,23 @@
 # ontology-clawra Changelog
 
+## v5.1.1 (2026-04-01) - ClawHub Optimization Release
+
+### Optimization for ClawHub Ranking
+- **Enhanced SKILL.md description**: Added comprehensive use cases and trigger keywords
+- **Improved trigger accuracy**: Clear guidance on when to use this skill
+- **Added learning workflow**: Emphasize recording insights after task completion
+- **New rules added**:
+  - 技能组合优化法则 (Skill Combination Optimization Law)
+  - PPT生成最佳实践 (PPT Generation Best Practices Rule)
+- **Knowledge graph expansion**: Added concepts for qoderwork-ppt, TigerBeetle, TradingAgents
+
+### Session Learning Record
+- Learned from 26-page FinTech open source project PPT generation
+- Recorded workflow: content rules → template matching → image generation → pipeline execution
+- Extracted solutions for: JSON escaping, image generation, dependency management
+
+---
+
 ## v5.0 (2026-03-25) - All-in-One Self-Contained Evolution Engine
 
 ### Major Upgrades
