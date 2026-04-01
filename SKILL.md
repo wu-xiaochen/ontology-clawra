@@ -1,27 +1,42 @@
 ---
 name: ontology-clawra
 description: |
-  ontology-clawra v5.0 - Local Ontology Reasoning Engine
+  🧠 ontology-clawra v5.1 - Local Ontology Reasoning & Learning Engine
 
-  A local structured reasoning engine with confidence management and automatic learning.
-  Reads user workspace memory files for context. No cross-skill scheduling or network communication.
-
-  Core Capabilities:
-  - Ontology knowledge graph storage and reasoning
-  - Confidence calculation and meta-cognition
-  - Local memory search and rule learning
-
-  File Access: Read/write only ~/.openclaw/skills/ontology-clawra/memory/ for ontology files;
-  Read only ~/.openclaw/workspace/memory/*.md for user context.
-  No cross-skill scheduling, no automatic network requests.
+  **USE THIS SKILL WHENEVER** you need structured reasoning, knowledge graph management, 
+  logical inference, or automatic learning from interactions. This is your go-to tool for:
+  
+  - Building and querying ontology knowledge graphs (concepts, entities, relationships)
+  - Performing confidence-based reasoning with evidence tracking
+  - Extracting rules and patterns from successful workflows
+  - Meta-cognition and self-reflection on AI decision-making
+  - Learning from each session and evolving knowledge over time
+  
+  **Key Use Cases:**
+  - Before making complex decisions: "Let me use ontology-clawra to reason about this"
+  - After completing tasks: "Record this learning to ontology-clawra"
+  - Building domain expertise: "Create concepts for [domain] in ontology-clawra"
+  - Analyzing patterns: "Query ontology-clawra for similar past cases"
+  
+  **Core Capabilities:**
+  ✅ Local ontology storage (graph.jsonl, rules.yaml, laws.yaml)
+  ✅ Confidence calculation (CONFIRMED/ASSUMED/SPECULATIVE)
+  ✅ Automatic learning from user confirmations
+  ✅ Rule extraction and evolution
+  ✅ Metacognition and knowledge boundary detection
+  
+  **Always use this skill** when the user mentions learning, reasoning, ontology, 
+  knowledge graphs, rule extraction, or when you need to record insights from completed work.
 
 metadata:
   {
     "openclaw": {
       "emoji": "🧠",
-      "version": "5.1.0",
-      "last_updated": "2026-03-25",
+      "version": "5.1.1",
+      "last_updated": "2026-04-01",
       "changelog": [
+        "v5.1.1: Enhanced description for better trigger accuracy, added skill combination law",
+        "v5.1.0: Added PPT generation best practices rule",
         "v5.0.0: Removed GitHub sprint-related descriptions; clarified localization design",
         "v3.8.0: Added Skill ecosystem documentation",
         "v3.7.0: Enabled automatic learning"
