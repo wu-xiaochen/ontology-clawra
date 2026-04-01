@@ -1,8 +1,8 @@
-# 🧠 Ontology-Clawra v5.1.1
+# 🧠 Ontology-Clawra v5.1.2
 
 > **Local Ontology Reasoning & Learning Engine** - 本地本体论推理与学习引擎
 
-[![Version](https://img.shields.io/badge/version-5.1.1-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-5.1.2-blue.svg)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## 🎯 为什么使用 Ontology-Clawra？
@@ -85,6 +85,7 @@ Rules (规则)
 
 | 版本 | 日期 | 关键进化 |
 |------|------|---------|
+| v5.1.2 | 2026-04-01 | ClawHub 安全修复，路径和网络代码优化 |
 | v5.1.1 | 2026-04-01 | ClawHub 优化，增强触发准确性 |
 | v5.1.0 | 2026-03-25 | 安全修复版，移除夸大描述 |
 | v5.0 | 2026-03-25 | 全能自包含进化引擎 |
