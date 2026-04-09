@@ -62,12 +62,54 @@ tags: [ontology, knowledge-graph, self-evolution, reasoning]
 scripts/
 ├── memory_manager.py      # 三层记忆管理器（核心）
 ├── ontology-clawra.py    # 推理引擎（接入memory_manager）
+├── auto_enhancer.py       # ⚠️ 自动增强器（见下方说明）
+├── network_fetch.py       # ⚠️ 网络获取模块（见下方说明）
 └── memory/
     ├── graph.jsonl        # 热层
     ├── memory.md          # 暖层
     └── archive/           # 冷层
         └── archived.jsonl
 ```
+
+---
+
+## ⚠️ 自动增强与网络模块（需知情）
+
+### scripts/auto_enhancer.py
+
+**功能**：发现优化点时自动升级版本并推送到远程。
+
+**具体操作**：
+- 修改 `SKILL.md`、`CHANGELOG.md`、`_meta.json` 版本号
+- 执行 `git add . && git commit && git push`
+- 执行 `clawhub publish . --version X.Y.Z`
+
+**使用的凭证**：
+- 本地 Git 凭证（SSH key 或 `gh` 缓存的 token）
+- ClawHub 登录凭证（本地已缓存）
+
+**风险**：会向 GitHub 推送内容并发布到 ClawHub。若不想自动发布，删除或禁用此文件。
+
+### scripts/network_fetch.py
+
+**功能**：当本地无数据时，自动从网络获取相关信息。
+
+**数据源**：搜索本地记忆文件，暂未配置外部 API 调用。
+
+**风险**：若启用外部网络请求，可能向第三方服务发送查询内容。启用前请审查具体实现。
+
+---
+
+## 凭证与权限说明
+
+| 操作 | 使用的凭证 | 数据外泄风险 |
+|------|----------|------------|
+| 本地记忆读写 | 无外部凭证 | 仅本地文件 |
+| Git push | 本地 Git 凭证 | 会推送 repo 内容到 GitHub |
+| ClawHub publish | ClawHub 本地缓存 token | 会发布 skill 到 ClawHub |
+| 网络请求 | 无（未配置） | 暂不适用 |
+
+**若不希望自动推送**：删除 `scripts/auto_enhancer.py`，或撤销 GitHub 写权限（设置为 read-only deploy key）。
 
 ---
 
