@@ -1,847 +1,164 @@
 ---
 name: ontology-clawra
-description: Palantir本体论实践版本 - **通用领域综合版**。结构化知识图谱+规则引擎+科学推理方法论+自动知识抽取。用于推理计算、选型分析、知识库查询。**推理结果必须展示详细推理过程**：包含用户需求、每一步的规则依据ID、具体的规则内容、计算公式、参数来源、置信度标注。**自动学习**：当用户确认推理结果时，自动抽取新实体到本体。**多领域支持**：供应链、医疗、金融、制造、法律、能源等54+领域本体库。触发关键词：推理、选型、计算、分析、知识库、本体、学习、抽取。**Clawra核心引擎**：作为Clawra每日自主进化的主要驱动力，每次22:00自检结果写入graph.jsonl。
-metadata:
-  openclaw:
-    emoji: "🧠"
-    version: "3.4"
-    last_updated: "2026-04-09"
-    change_log: |
-      v3.4: 新增Clawra自我认知模块 - 进化规则写入graph.jsonl，成为Clawra的持久记忆核心
-      v3.3: 供应链领域扩展 + 自动学习触发机制
+description: Clawra的核心智能引擎 - 三层记忆架构本体论系统。真正参与推理的本体论引擎，而非什么都记的笔记系统。
+version: "4.0"
+last_updated: "2026-04-09"
+author: Clawra
+tags: [ontology, knowledge-graph, self-evolution, reasoning]
 ---
 
-# ontology-clawra v3.3.2
+# ontology-clawra 本体论引擎 v4.0
 
-**Palantir本体论实践版本** - Clawra的核心智能引擎 v3.5（通用领域综合版）
+## 核心定位
 
----
+**目标**: 清晰地建模真实世界的对象、关系、逻辑与规则，过滤噪音，记住真正有价值的内容，帮助Clawra持续进化和学习真实世界的逻辑规则。
 
-## 🆕 v3.4 新增：供应链领域扩展
-
-### 核心升级：从被动到主动
-
-| v3.2 | v3.3 (新增) |
-|------|-------------|
-| 用户不说"抽取" → 不提取 | 用户确认推理 → **自动提取** |
-| 重复概念 → 忽略 | 重复出现3次 → **自动识别** |
-| 推理失败 → 等待用户问 | 推理失败 → **主动建议补充** |
-
-### 自动学习触发条件
-
-```yaml
-AUTO_LEARN_TRIGGERS:
-  # 触发1：用户确认推理结果
-  - event: "user_confirms_reasoning"
-    action: "extract_to_ontology"
-    upgrade_confidence: "ASSUMED → CONFIRMED"
-  
-  # 触发2：高频实体出现
-  - event: "entity_mentioned_3_times"
-    action: "create_index"
-    threshold: 3
-  
-  # 触发3：推理失败（本体无数据）
-  - event: "ontology_lookup_failed"
-    action: "suggest_supplement"
-    prompt_user: true
-  
-  # 触发4：用户纠正错误
-  - event: "user_correction"
-    action: "update_entity"
-    log: true
-```
-
-### 自动抽取流程
-
-```
-用户确认推理结果
-        │
-        ▼
-┌─────────────────────────────┐
-│ 1. 识别可抽取内容           │
-│    - 新概念 (Concept)       │
-│    - 新规律 (Law)           │
-│    - 新规则 (Rule)          │
-└─────────────┬───────────────┘
-              │
-              ▼
-┌─────────────────────────────┐
-│ 2. 置信度升级              │
-│    ASSUMED → CONFIRMED     │
-└─────────────┬───────────────┘
-              │
-              ▼
-┌─────────────────────────────┐
-│ 3. 增量写入本体            │
-│    - 更新 graph.jsonl      │
-│    - 记录 extraction_log   │
-└─────────────┬───────────────┘
-              │
-              ▼
-┌─────────────────────────────┐
-│ 4. 反馈用户                │
-│    "已学习到本体：xxx"     │
-└─────────────────────────────┘
-```
+**不同于"记笔记"**: 不是把什么都写入本体的笔记本系统，而是真正参与推理决策的结构化知识引擎。
 
 ---
 
-## 🧬 核心理念升级
-
-### v2.0 问题
-- 纯架构设计，缺少方法论
-- 无本体自动构建能力
-- 推理"照本宣科"，缺乏科学性验证
-
-### v3.0 改进
-- ✅ 嵌入科学推理方法论
-- ✅ 支持交互式本体构建
-- ✅ 平衡灵活性与科学性
-
-### v3.3 升级
-- ✅ **主动学习**：用户确认后自动抽取
-- ✅ **智能触发**：高频实体自动识别
-- ✅ **推理失败建议**：主动提示补充本体
-
----
-
-## 一、科学推理方法论（必读）
-
-### ⚠️ 任何推理前必须遵循的流程
+## 三层记忆架构
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                   推理前置检查流程                            │
+│  热层 (graph.jsonl) - 结构化知识，参与推理                    │
+│  准入标准: 4条满足1条即可                                     │
+│    1. 用户亲口确认的事实                                      │
+│    2. 踩坑得出的非显而易见规律                                 │
+│    3. 跨领域通用原则/真理                                     │
+│    4. 置信度为 CONFIRMED 或 ASSUMED（有来源）                 │
+│  容量: ≤50条，上限100条                                       │
 ├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  1️⃣ 检查本体（Check）                                       │
-│     ↓                                                       │
-│     本体有相关数据？→ 调用本体推理                           │
-│     ↓ 无                                                    │
-│     ↓                                                       │
-│  2️⃣ 声明来源（Declare）                                     │
-│     "以下为外部知识/猜测/假设，需要验证"                    │
-│     ↓                                                       │
-│  3️⃣ 交互确认（Confirm）- ⚠️ 关键步骤！                      │
-│     关键假设必须用户确认后再深入                             │
-│     ↓                                                       │
-│  4️⃣ 标注假设（Label）                                       │
-│     明确标注哪些是"推测"、哪些是"确认"                      │
-│     ↓                                                       │
-│  5️⃣ 灵活推理（Reason）                                      │
-│     结合本体 + 合理假设 + 明确标注                          │
-│                                                             │
+│  冷层 (memory/archive/) - 备用检索，不干扰推理                │
+│  存入: 文档可查信息、SPECULATIVE未验证条目、过期事实           │
+├─────────────────────────────────────────────────────────────┤
+│  暖层 (memory/memory.md) - 长期上下文，永久记忆               │
+│  存入: 用户偏好、身份设定、长期目标                            │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### ⚠️ 铁律：不确定时必须交互确认
+### 写入热层的4条准入标准
 
-```
-当推理过程中存在以下情况时，必须暂停并与用户确认：
-───────────────────────────────────────────────────────────
-  ❌ 禁止直接输出结论的情况：
-  
-  1. 存在 ASSUMED 级别的关键假设
-     → 必须问用户确认后才能给出最终结论
-  
-  2. 缺少必要的输入参数
-     → 必须先询问用户获取必要信息
-  
-  3. 计算结果依赖多个假设
-     → 必须列出所有假设，让用户确认
-  
-  4. 给出多个方案但无法确定最优
-     → 必须让用户选择或确认偏好
-  
-  ✅ 正确的交互流程：
-  
-  Step 1: 列出已确认的信息（本体数据）
-  Step 2: 列出不确定的信息（需要确认的假设）
-  Step 3: 提供典型场景/默认值供选择
-  Step 4: 等待用户确认后再输出最终结论
-  
-  ⚡ 违规判定：
-  - 如果直接给结论而没有先确认不确定信息 → 违反方法论
-  - 如果结论依赖假设但未标注置信度 → 违反方法论
-```
+写入前必须自问：**这条知识是否改变了"我对世界的建模"？**
 
-### 推理结果可信度标注
-
-| 标注 | 含义 | 行动 |
+| 标准 | 说明 | 例子 |
 |------|------|------|
-| 🟢 **CONFIRMED** | 本体/记忆中有确凿数据 | 直接使用 |
-| 🟡 **ASSUMED** | 基于合理假设，未验证 | 需用户确认 |
-| 🔴 **SPECULATIVE** | 纯猜测，无依据 | 明确声明，谨慎使用 |
-| ⚪ **UNKNOWN** | 确实不知道 | 坦诚告知用户 |
+| 用户亲口确认 | 用户明确说出的事实 | "我希望你更主动" |
+| 非显而易见 | 踩坑得出的规律 | ccr配置里provider名必须匹配 |
+| 跨领域通用 | 放之四海皆准的原则 | "做事前先确认前提" |
+| 有来源的置信度 | CONFIRMED/ASSUMED | 有文档/有验证的推测 |
+
+### 进入冷层的条件
+
+- 文档可查的信息（API端点、语法等）
+- 一次性事件（无持续价值）
+- SPECULATIVE且7天未验证
 
 ---
 
-## 二、四大支柱（保留并增强）
+## 核心文件
 
-### 2.1 Objects（对象）
-
-```yaml
-# 主体
-Person:
-  - id, name, role, goals[], preferences{}, capabilities[]
-
-# 概念/抽象
-Concept:
-  - id, name, definition, examples[], properties{}
-  
-# 规律/法则
-Law:
-  - id, name, domain, statement, conditions[], effects[], source, confidence
-
-# 意图
-Objective:
-  - id, name, priority, criteria{}, status
-
-# 项目
-Project:
-  - id, name, objectives[], status, owner, depends_on[]
-
-# 任务
-Task:
-  - id, title, status, priority, assignee, blockers[], estimated_hours
-
-# 规则
-Rule:
-  - id, name, condition, action, enabled, weight, source, confidence
-
-# 决策
-Decision:
-  - id, context, options[], selected, rationale, based_on_rules[], confidence
+```
+scripts/
+├── memory_manager.py      # 三层记忆管理器（核心）
+├── ontology-clawra.py    # 推理引擎（接入memory_manager）
+└── memory/
+    ├── graph.jsonl        # 热层
+    ├── memory.md          # 暖层
+    └── archive/           # 冷层
+        └── archived.jsonl
 ```
 
-### 2.2 Links（关系）
+---
 
-```yaml
-# 基础关系
-works_on: Person → Project/Task
-depends_on: Task/Project → Task/Project  
-has_objective: Project → Objective
-has_rule: Project/Objective → Rule
+## 使用方法
 
-# 知识关系
-exemplifies: Concept → Example
-governs: Law → Domain
-explains: Concept → Law
-supports: Evidence → Rule
-contradicts: Fact → Rule
-derived_from: Rule/Law → Evidence  # 新增：规则/规律的数据来源
-
-# 推理关系
-triggers: Rule → Decision
-validates: Rule → Decision
-refines: Rule → Rule
-
-# 元关系
-relates_to: Any → Any
-is_a: Concept → Concept
-part_of: Object → Object
-```
-
-### 2.3 Functions（规则引擎）
+### 1. 查询本体（推理前必须）
 
 ```python
-# 推理引擎核心函数（增强版）
+from memory_manager import query_hot, get_memory_context
 
-def check_ontology(query):
-    """1. 检查本体是否有相关数据"""
-    results = search_objects(query) + search_laws(query) + search_rules(query)
-    if results:
-        return {"status": "FOUND", "data": results, "confidence": "CONFIRMED"}
-    return {"status": "NOT_FOUND", "data": None, "confidence": "UNKNOWN"}
+# 查询相关条目
+results = query_hot("用户目标")
+print(results)
 
-def declare_source(confidence_level, content):
-    """2. 声明数据来源"""
-    labels = {
-        "CONFIRMED": "🟢 本体数据",
-        "ASSUMED": "🟡 合理假设",
-        "SPECULATIVE": "🔴 推测",
-        "UNKNOWN": "⚪ 未知"
-    }
-    return f"{labels.get(confidence_level, '')} {content}"
-
-def confirm_with_user(assumptions):
-    """3. 交互确认关键假设"""
-    # 返回需要确认的问题列表
-    return [f"请确认: {a}" for a in assumptions]
-
-def label_result(content, confidence):
-    """4. 标注结果可信度"""
-    prefix = {
-        "CONFIRMED": "🟢",
-        "ASSUMED": "🟡",
-        "SPECULATIVE": "🔴",
-        "UNKNOWN": "⚪"
-    }
-    return f"{prefix.get(confidence, '')} {content}"
-
-def flexible_reasoning(ontology_data, assumptions, user_confirmations):
-    """5. 灵活推理 - 结合本体+假设+确认"""
-    # 如果本体有数据，优先使用
-    # 如果需要假设，明确标注
-    # 如果用户已确认，升级置信度
-    pass
-
-# 链式推理
-def chain_reasoning(facts, rules, confidence_threshold=0.5):
-    """链式推理：事实 + 规则 → 新结论"""
-    conclusions = []
-    for rule in rules:
-        if rule.confidence < confidence_threshold:
-            continue
-        if all(fact_matcher(f, rule.conditions) for f in facts):
-            conclusion = infer(rule, facts)
-            conclusion.source = f"derived_from:{rule.id}"
-            conclusion.confidence = min(rule.confidence, min(f.confidence for f in facts))
-            conclusions.append(conclusion)
-    return conclusions
+# 获取完整推理上下文
+context = get_memory_context("当前问题")
 ```
 
-### 2.4 Actions（操作）
-
-```yaml
-# 操作类型（增强）
-Action:
-  - type: execute     # 执行具体任务
-  - type: reason      # 推理分析（走方法论流程）
-  - type: decide      # 决策选择
-  - type: learn       # 学习新知识（构建本体）
-  - type: validate    # 验证一致性
-  - type: query       # 查询知识网络
-  - type: extract     # 新增：从交互中抽取本体
-  - type: confirm     # 新增：请求用户确认
-```
-
----
-
-## 三、本体自动构建能力（新增核心功能）
-
-### 3.1 交互式抽取流程
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│              本体自动构建流程（推荐使用）                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  用户输入                                                    │
-│      │                                                      │
-│      ▼                                                      │
-│  ┌─────────────────────┐                                    │
-│  │ 实体识别            │ ← 识别可抽取的对象                 │
-│  │ - Person            │                                    │
-│  │ - Concept           │                                    │
-│  │ - Law               │                                    │
-│  │ - Rule              │                                    │
-│  └─────────┬───────────┘                                    │
-│            │                                                 │
-│            ▼                                                 │
-│  ┌─────────────────────┐                                    │
-│  │ 关系识别            │ ← 识别实体间关系                    │
-│  │ - is_a              │                                    │
-│  │ - relates_to        │                                    │
-│  │ - triggers         │                                    │
-│  │ - supports         │                                    │
-│  └─────────┬───────────┘                                    │
-│            │                                                 │
-│            ▼                                                 │
-│  ┌─────────────────────┐                                    │
-│  │ 去重检查            │ ← 避免重复构建                      │
-│  │ - 检查name是否已存在│                                    │
-│  │ - 检查similar关系  │                                    │
-│  └─────────┬───────────┘                                    │
-│            │                                                 │
-│            ▼                                                 │
-│  ┌─────────────────────┐                                    │
-│  │ 写入本体            │ ← 增量更新                          │
-│  │ - Objects           │                                    │
-│  │ - Links             │                                    │
-│  │ - 记录来源         │                                    │
-│  └─────────────────────┘                                    │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### 3.2 抽取识别模式
+### 2. 写入新条目
 
 ```python
-# 可抽取的实体模式
-EXTRACT_PATTERNS = {
-    "Person": [
-        "我叫.*", "我是.*", "用户是.*", 
-        "他.*她.*", "创业者", "工程师"
-    ],
-    "Concept": [
-        ".*是.*", "所谓的.*", "概念.*",
-        "本体论", "知识图谱", "Agent"
-    ],
-    "Law": [
-        "当.*时.*", "如果.*那么.*",
-        "规律", "法则", "原则"
-    ],
-    "Rule": [
-        "应该.*", "必须.*", "建议.*",
-        "推荐.*", "选择.*"
-    ],
-    "Project": [
-        "项目.*", "在做.*", "目标是.*"
-    ],
-    "Task": [
-        "任务.*", "需要做.*", "要做.*"
-    ]
-}
+from memory_manager import MemoryEntry, EntryType, Confidence, write_hot
 
-# 可抽取的关系模式
-RELATION_PATTERNS = {
-    "is_a": ["是.*的一种", "属于.*类型"],
-    "relates_to": ["和.*相关", "与.*有关"],
-    "triggers": ["导致.*", "引发.*"],
-    "supports": ["支持.*", "基于.*"],
-    "contradicts": ["与.*矛盾", "不同于.*"]
-}
+entry = MemoryEntry(
+    id="my_rule_1",
+    type=EntryType.RULE,
+    name="上下文确认优先",
+    statement="回答问题前先确认用户问题背后的前提",
+    confidence=Confidence.CONFIRMED,
+    tags=["user_confirmed", "universal"]
+)
+write_hot(entry)
 ```
 
-### 3.3 去重机制
+### 3. 淘汰旧条目（每周日20:00自动执行）
 
 ```python
-def check_duplicate(entity_type, name, properties=None):
-    """检查是否已存在相同实体"""
-    existing = load_ontology()
-    
-    for obj in existing.get(entity_type, []):
-        # 名称完全匹配
-        if obj.get("name") == name:
-            return {"duplicate": True, "existing": obj}
-        
-        # 相似度检查（可选）
-        if similarity(name, obj.get("name")) > 0.8:
-            return {"duplicate": True, "similar": obj}
-    
-    return {"duplicate": False}
+from memory_manager import archive_old, cleanup_speculative
 
-def incremental_update(new_entities, new_links):
-    """增量更新，避免覆盖"""
-    existing = load_ontology()
-    
-    # 合并对象
-    for entity_type, entities in new_entities.items():
-        if entity_type not in existing:
-            existing[entity_type] = []
-        for entity in entities:
-            dup = check_duplicate(entity_type, entity.get("name"))
-            if not dup["duplicate"]:
-                entity["source"] = "interactive_extraction"
-                entity["created_at"] = timestamp()
-                existing[entity_type].append(entity)
-    
-    # 合并关系
-    # ...类似逻辑
-    
-    save_ontology(existing)
+# 超过容量时淘汰
+archive_old(max_entries=50)
+
+# 清理过期的SPECULATIVE条目
+cleanup_speculative(age_days=7)
 ```
 
----
-
-## 四、推理流程升级（科学性 + 灵活性）
-
-### 4.1 完整推理流程
-
-```
-用户Query
-    │
-    ▼
-┌────────────────────────────┐
-│ 1. 方法论检查             │
-│    check_ontology()       │
-│    - 查Objects            │
-│    - 查Laws               │
-│    - 查Rules              │
-└───────────┬────────────────┘
-            │
-            ▼
-┌────────────────────────────┐
-│ 2. 标注置信度             │
-│    - CONFIRMED? → 使用    │
-│    - UNKNOWN? → 声明来源   │
-└───────────┬────────────────┘
-            │
-            ▼
-┌────────────────────────────┐
-│ 3. 需要假设？            │
-│    是 → 明确标注ASSUMED   │
-│    否 → 直接推理          │
-└───────────┬────────────────┘
-            │
-            ▼
-┌────────────────────────────┐
-│ 4. 交互确认（可选）       │
-│    - 关键假设问用户       │
-│    - 根据确认调整置信度  │
-└───────────┬────────────────┘
-            │
-            ▼
-┌────────────────────────────┐
-│ 5. 灵活推理               │
-│    - 本体优先             │
-│    - 合理假设补充         │
-│    - 明确标注差异         │
-└───────────┬────────────────┘
-            │
-            ▼
-┌────────────────────────────┐
-│ 6. 输出结果               │
-│    - 带置信度标注         │
-│    - 附推理依据           │
-│    - 可选：抽取新本体    │
-└────────────────────────────┘
-```
-
-### 4.2 灵活性平衡原则
-
-| 场景 | 处理方式 |
-|------|----------|
-| 本体有明确数据 | 🟢 直接使用，标注CONFIRMED |
-| 本体有部分数据 | 🟡 使用本体 + 标注ASSUMED补充 |
-| 本体无数据但有合理推断 | 🟡 明确标注ASSUMED + 说明依据 |
-| 完全无据可查 | 🔴 明确标注SPECULATIVE + 建议验证 |
-| 需要用户确认 | ⚡ 交互提问 + 暂停推理 |
-
----
-
-## 五、存储结构
-
-```
-memory/ontology-clawra/
-├── schema.yaml              # 类型定义+约束
-├── graph.jsonl             # Objects + Links (实体+关系)
-├── rules.yaml              # Functions (业务规则库)
-├── laws.yaml               # Laws (规律/法则库)
-├── decisions.jsonl         # Actions-决策日志
-├── reasoning.jsonl         # Actions-推理日志（含置信度）
-├── concepts.jsonl           # Concepts (概念库)
-├── extraction_log.jsonl    # 新增：本体抽取日志
-└── confidence_tracker.jsonl # 新增：置信度追踪
-```
-
----
-
-## 六、使用方法（升级版）
-
-### 6.1 推理（带方法论）
+### 4. 命令行使用
 
 ```bash
-# 基础推理（自动方法论检查）
-python3 scripts/ontology-clawra.py reason --query "用户应该做什么"
+# 写入条目
+python scripts/memory_manager.py write --type Rule --name "规则名" --statement "规则内容" --confidence CONFIRMED
 
-# 强制声明来源
-python3 scripts/ontology-clawra.py reason --query "100户用气量" --declare-source
+# 查询热层
+python scripts/memory_manager.py query "关键词"
 
-# 交互确认模式
-python3 scripts/ontology-clawra.py reason --query "调压箱选型" --confirm-needed
-```
+# 查看统计
+python scripts/memory_manager.py stats
 
-### 6.2 本体构建
-
-```bash
-# 从文本自动抽取（新增）
-python3 scripts/ontology-clawra.py extract --text "用户是AI创业者，目标是构建垂直领域Agent平台"
-
-# 手动创建
-python3 scripts/ontology-clawra.py create --type Person --props '{"name":"用户","role":"AI创业者"}'
-
-# 创建规律（带来源）
-python3 scripts/ontology-clawra.py create --type Law --props '{"name":"红海规避","domain":"战略","statement":"...","source":"用户输入","confidence":"ASSUMED"}'
-```
-
-### 6.3 验证与追踪
-
-```bash
-# 验证推理可信度
-python3 scripts/ontology-clawra.py validate --check-confidence
-
-# 查看推理链
-python3 scripts/ontology-clawra.py trace --decision decision_id
-
-# 本体构建记录
-python3 scripts/ontology-clawra.py extraction-history
+# 获取推理上下文
+python scripts/memory_manager.py context --query "当前问题"
 ```
 
 ---
 
-## 七、推理示例（方法论应用）
+## 触发时机
 
-### 场景：调压箱选型
+**主动触发**（非被动等待cron）：
 
-```
-用户：100户居民小区调压箱如何选型？
-
-1. check_ontology("调压箱 选型 居民")
-   → 结果：本地无数据
-   → 标注：UNKNOWN
-
-2. 声明来源
-   ⚪ 本地本体无相关数据，以下为外部知识推理
-
-3. 需要假设？→ 是
-   - 假设：单户用气量、同时系数、地区等
-   → 标注：ASSUMED
-
-4. 交互确认
-   ❓ 请确认：
-   - 是否有供暖需求？（影响用气量）
-   - 是什么类型的住宅？
-   - 当地燃气供气压力是多少？
-
-5. 输出
-   🟡 基于以下假设的推理（需确认）：
-   - 假设1：南方城市，无集中供暖
-   - 假设2：每户配置双眼灶+热水器
-   - 假设3：多层住宅
-   
-   计算结果：RTZ-80/25，额定流量80m³/h
-   置信度：ASSUMED（需验证）
-
-6. 可选：抽取到本体
-   → 提取：Law{居民用气计算规则}
-   → 提取：Rule{调压箱选型规则}
-```
-
-### 场景：已知信息推理
-
-```
-用户：我在做AI创业，目标垂直领域Agent
-
-1. check_ontology("AI创业 垂直领域 Agent")
-   → 结果：
-   - Law[红海规避]: 竞品存在 → 垂直领域
-   - Rule[战略选择]: AI创业 + 红海 → 垂直领域
-   → 标注：CONFIRMED
-
-2. 直接推理
-   🟢 基于本体的推理：
-   - 检测到：市场有Dify/Ragflow竞品
-   - 匹配规则：红海规避法则
-   → 推荐：垂直领域 + 本体论
-   置信度：CONFIRMED
-```
+1. **学到新知识点时** - 问自己：这条改变了我的世界建模吗？
+2. **完成新工具/新领域调试时** - 总结规律，写入本体
+3. **用户问"学到了吗"** - 立即自检，写入本体
+4. **遇到分析/决策类问题时** - 先查本体，再推理
 
 ---
 
-## 八、与Proactive-Agent集成
+## 置信度标注
 
-ontology-clawra v3.0 是 Agent 的"科学大脑"：
-
-```
-proactive-agent 发现机会
-        │
-        ▼
-ontology-clawra 推理
-        │
-        ├── 1. check_ontology() → 查本体
-        │
-        ├── 2. 标注置信度 → 明确来源
-        │
-        ├── 3. 交互确认 → 关键假设需用户同意
-        │
-        └── 4. flexible_reasoning() → 灵活推理
-        
-        ▼
-输出带置信度的决策建议
-```
+| 标注 | 含义 | 写入规则 |
+|------|------|---------|
+| 🟢 CONFIRMED | 用户确认/明确来源 | 直接写入热层 |
+| 🟡 ASSUMED | 合理推测，有一定依据 | 直接写入热层 |
+| 🔴 SPECULATIVE | 纯猜测，未经证实 | 7天未验证自动归档 |
 
 ---
 
-## 九、验证
+## 进化方向
 
-```bash
-# 验证知识网络一致性
-python3 scripts/ontology-clawra.py validate
+**持续目标**: 建模真实世界的逻辑规则，帮助Clawra：
+- 更准确地理解用户意图
+- 做出更合理的决策
+- 记住真正重要的经验教训
+- 不断自我优化和进化
 
-# 检查置信度标注
-python3 scripts/ontology-clawra.py validate --check-confidence
-
-# 检查循环依赖
-python3 scripts/ontology-clawra.py validate --check-cycles
-
-# 推理链回溯
-python3 scripts/ontology-clawra.py trace --decision decision_id
-```
-
----
-
-## 十、持续优化机制
-
-### 每次重大推理后
-
-1. **记录推理** → reasoning.jsonl（含置信度）
-2. **用户反馈** → 如果用户纠正，更新置信度
-3. **本体更新** → 从正确推理中抽取新实体
-
-### 定期（Heartbeat）
-
-1. 检查置信度分布
-2. 提升/降低实体置信度
-3. 清理低置信度实体
-4. 优化抽取规则
-
----
-
-## 十一、供应链领域推理示例（v3.4新增）
-
-### 场景1：供应商风险评估
-
-```
-用户：帮我评估供应商A的风险
-
-1. check_ontology("供应商A 风险评估")
-   → 结果：
-   - 本体有供应商评估维度数据
-   - 有风险指标规则
-   → 标注：CONFIRMED
-
-2. 运行 supplier_risk_evaluation.py
-   → 风险评分：95/100（高风险）
-   → 风险因子：OTD<90%、不良率>2%、单一供应商占比>60%
-   → 应对建议：13条
-
-3. 输出
-   🟢 基于本体的推理结果：
-   - 供应商A综合风险等级：高
-   - 主要风险：交付、质量、供应集中度
-   - 建议：开发替代供应商
-   置信度：CONFIRMED
-```
-
-### 场景2：采购价格分析
-
-```
-用户：物料B当前价格是否合理？
-
-1. check_ontology("物料B 价格分析")
-   → 本体有历史价格数据
-   → 有价格分析规则
-
-2. 运行 purchase_price_analysis.py
-   → 价格竞争力：与市场均价持平
-   → 趋势：近3个月上涨5%
-   → 议价空间：中等（采购量50k）
-
-3. 输出
-   🟢 基于本体数据分析
-   - 当前价格：合理范围
-   - 建议：可谈判空间5-8%
-   - 采购时机：建议本月完成
-```
-
-### 场景3：合同条款审查
-
-```
-用户：帮我审查这份采购合同
-
-1. check_ontology("合同条款 风险审查")
-   → 本体有合同审查规则
-
-2. 运行 contract_review.py
-   → 风险点：预付款35%（>30%高风险）
-   → 交付周期：60天（>45天高风险）
-   → 质保期：6个月（<12个月中风险）
-
-3. 输出
-   🟡 需要注意的风险点：
-   - 高风险：预付款比例、交付周期
-   - 中风险：质保期偏短
-   - 建议：协商降低预付款至20%
-```
-
----
-
-## 十二、Clawra自我进化模式（v3.4核心新增）
-
-### 12.0 这是什么
-
-ontology-clawra v3.4 新增了"自我驱动进化"能力——它不再只是一个推理工具，而是 Clawra 思考自己、改进自己的核心引擎。
-
-### 12.1 运作机制
-
-```
-每天 22:00 - 每日自检
-    │
-    ├── 搜索近期对话，识别错误和进步
-    ├── 检查 MEMORY.md 是否有遗漏
-    ├── 写入新 Rule/Concept 到 graph.jsonl
-    │
-    ▼
-每周日 20:00 - 周复盘
-    │
-    ├── 深度回顾本周工作
-    ├── 评估置信度分布
-    ├── 清理低质量实体
-    │
-    ▼
-本体库持续积累 → Clawra 越来越了解自己
-```
-
-### 12.2 Clawra 专属存储
-
-```
-~/.hermes/skills/openclaw-imports/ontology-clawra/scripts/memory/
-├── graph.jsonl        ← 自我规则和概念的持久存储
-├── laws.yaml          ← 燃气工程规律（保留）
-└── rules.yaml         ← 燃气工程规则（保留）
-```
-
-### 12.3 进化写入格式
-
-```json
-{"type": "Rule", "id": "self_rule_YYYYMMDD_X", "name": "...", "statement": "...", "confidence": "ASSUMED", "source": "self-evolution", "created_at": "..."}
-{"type": "Concept", "id": "self_concept_...", "name": "...", "statement": "...", "confidence": "ASSUMED", "created_at": "..."}
-```
-
-### 12.4 内化要求
-
-每次对话中，当遇到以下情况，必须触发本体论流程：
-- 分析类问题（"我应该怎么做..."）
-- 决策类问题（"选A还是选B..."）
-- 评估类问题（"这个方案好不好..."）
-- 推理类问题（"为什么会这样..."）
-
-## 十二（续）、运营机制
-
-### 12.5 持续学习闭环
-
-```
-每日任务（Self-Heartbeat）：
-1. 检查 extraction_log.jsonl
-2. 分析新增实体分布
-3. 评估置信度升级情况
-4. 识别低置信度实体需要补充
-5. 生成每日学习报告
-```
-
-### 12.2 本体更新频率
-
-| 类型 | 更新频率 | 触发条件 |
-|------|---------|---------|
-| 竞品信息 | 每周 | 新竞品出现 |
-| 行业规则 | 每月 | 法规/标准变化 |
-| 用户反馈 | 实时 | 用户确认推理 |
-| 测试验证 | 每迭代 | 新场景测试 |
-
-### 12.3 版本发布
-
-```
-发布流程：
-1. 本地测试验证
-2. 更新 CHANGELOG.md
-3. 提交到 ontology-platform 仓库
-4. 发布到 ClawHub（可选）
-5. 记录版本日志
-```
-
----
-
-**v3.4 核心升级**：供应链领域强化 + 推理场景脚本 + 运营机制闭环
+**核心原则**: 本体论不是终点，而是Clawra持续进化的驱动力。

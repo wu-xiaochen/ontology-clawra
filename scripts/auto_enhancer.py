@@ -206,7 +206,7 @@ def analyze_and_enhance() -> tuple[bool, List[str]]:
             changes.append(f"⚠️ 缺失文件: {f}")
 
     # 3. 检查 memory 目录内容 - 核心增强点
-    memory_dir = SKILL_DIR / "memory"
+    memory_dir = SKILL_DIR / "scripts" / "memory"
     if memory_dir.exists():
         files = list(memory_dir.glob("*"))
         if len(files) < 5:
@@ -257,7 +257,7 @@ def check_domain_coverage() -> List[str]:
     ]
     
     # 检查 memory/laws.yaml 中的领域覆盖
-    laws_file = SKILL_DIR / "memory" / "laws.yaml"
+    laws_file = SKILL_DIR / "scripts" / "memory" / "laws.yaml"
     if laws_file.exists():
         content = laws_file.read_text()
         for domain in known_domains:
@@ -277,7 +277,7 @@ def check_rule_coverage() -> List[str]:
         "知识抽取", "规则匹配", "置信度评估", "多领域推理"
     ]
     
-    rules_file = SKILL_DIR / "memory" / "rules.yaml"
+    rules_file = SKILL_DIR / "scripts" / "memory" / "rules.yaml"
     if rules_file.exists():
         content = rules_file.read_text()
         for scenario in required_scenarios:
@@ -289,7 +289,7 @@ def check_rule_coverage() -> List[str]:
 
 def ensure_memory_files():
     """确保 memory 目录有必要的文件"""
-    memory_dir = SKILL_DIR / "memory"
+    memory_dir = SKILL_DIR / "scripts" / "memory"
     memory_dir.mkdir(exist_ok=True)
 
     # 确保有基础 schema
