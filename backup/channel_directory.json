@@ -1,0 +1,18 @@
+{
+  "updated_at": "2026-04-10T08:09:47.916903",
+  "platforms": {
+    "telegram": [
+      {
+        "id": "8578764073",
+        "name": "isaac",
+        "type": "dm",
+        "thread_id": null
+      }
+    ],
+    "whatsapp": [],
+    "signal": [],
+    "email": [],
+    "sms": [],
+    "bluebubbles": []
+  }
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "name": "queries.md",
+    "path": "skills/oswalpalash/ontology/references/queries.md",
+    "sha": "fefb6781c78ef8e97050cb886faecf9b217a0ef5",
+    "size": 5471,
+    "url": "https://api.github.com/repos/openclaw/skills/contents/skills/oswalpalash/ontology/references/queries.md?ref=main",
+    "html_url": "https://github.com/openclaw/skills/blob/main/skills/oswalpalash/ontology/references/queries.md",
+    "git_url": "https://api.github.com/repos/openclaw/skills/git/blobs/fefb6781c78ef8e97050cb886faecf9b217a0ef5",
+    "download_url": "https://raw.githubusercontent.com/openclaw/skills/main/skills/oswalpalash/ontology/references/queries.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/openclaw/skills/contents/skills/oswalpalash/ontology/references/queries.md?ref=main",
+      "git": "https://api.github.com/repos/openclaw/skills/git/blobs/fefb6781c78ef8e97050cb886faecf9b217a0ef5",
+      "html": "https://github.com/openclaw/skills/blob/main/skills/oswalpalash/ontology/references/queries.md"
+    }
+  },
+  {
+    "name": "schema.md",
+    "path": "skills/oswalpalash/ontology/references/schema.md",
+    "sha": "094c894b131c8f565b08739da7e6248de7897ca1",
+    "size": 6650,
+    "url": "https://api.github.com/repos/openclaw/skills/contents/skills/oswalpalash/ontology/references/schema.md?ref=main",
+    "html_url": "https://github.com/openclaw/skills/blob/main/skills/oswalpalash/ontology/references/schema.md",
+    "git_url": "https://api.github.com/repos/openclaw/skills/git/blobs/094c894b131c8f565b08739da7e6248de7897ca1",
+    "download_url": "https://raw.githubusercontent.com/openclaw/skills/main/skills/oswalpalash/ontology/references/schema.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/openclaw/skills/contents/skills/oswalpalash/ontology/references/schema.md?ref=main",
+      "git": "https://api.github.com/repos/openclaw/skills/git/blobs/094c894b131c8f565b08739da7e6248de7897ca1",
+      "html": "https://github.com/openclaw/skills/blob/main/skills/oswalpalash/ontology/references/schema.md"
+    }
+  }
+]
