@@ -1,7 +1,0 @@
-name: health-monitor
-description: Monitor agent health - check cron job status, model availability, and system health. Alert user via Telegram if issues detected.
-events:
-  - cron:failed
-  - cron:completed
-  - agent:error
-  - gateway:start
