@@ -1,13 +1,13 @@
 ---
 name: ontology-clawra
 description: Clawra的核心智能引擎 - 三层记忆架构本体论系统。真正参与推理的本体论引擎，而非什么都记的笔记系统。
-version: "4.2.0"
+version: "4.3.0"
 last_updated: "2026-04-10"
 author: Clawra
 tags: [ontology, knowledge-graph, self-evolution, reasoning]
 ---
 
-# ontology-clawra 本体论引擎 v4.0
+# ontology-clawra 本体论引擎 v4.3
 
 ## 核心定位
 
@@ -17,11 +17,12 @@ tags: [ontology, knowledge-graph, self-evolution, reasoning]
 
 ---
 
-## 三层记忆架构
+## 三层记忆架构（Clawra 专用版）
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  热层 (graph.jsonl) - 结构化知识，参与推理                    │
+│  路径: skills/openclaw-imports/ontology-clawra/scripts/memory/graph.jsonl │
 │  准入标准: 4条满足1条即可                                     │
 │    1. 用户亲口确认的事实                                      │
 │    2. 踩坑得出的非显而易见规律                                 │
@@ -29,11 +30,14 @@ tags: [ontology, knowledge-graph, self-evolution, reasoning]
 │    4. 置信度为 CONFIRMED 或 ASSUMED（有来源）                 │
 │  容量: ≤50条，上限100条                                       │
 ├─────────────────────────────────────────────────────────────┤
-│  冷层 (memory/archive/) - 备用检索，不干扰推理                │
-│  存入: 文档可查信息、SPECULATIVE未验证条目、过期事实           │
+│  暖层 (MEMORY.md) - 行为触发器，Hermes每次对话注入             │
+│  路径: /Users/xiaochenwu/.hermes/memories/MEMORY.md         │
+│  限制: 2200字符/轮                                           │
+│  存入: 条件反射规则、当前上下文摘要                            │
 ├─────────────────────────────────────────────────────────────┤
-│  暖层 (memory/memory.md) - 长期上下文，永久记忆               │
-│  存入: 用户偏好、身份设定、长期目标                            │
+│  冷层 (GitHub备份) - 持久化，不干扰推理                       │
+│  存入: 所有记忆文件的GitHub私有仓库备份                        │
+│  仓库: github.com/wu-xiaochen/clawra-identity (私有)        │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -44,7 +48,7 @@ tags: [ontology, knowledge-graph, self-evolution, reasoning]
 | 标准 | 说明 | 例子 |
 |------|------|------|
 | 用户亲口确认 | 用户明确说出的事实 | "我希望你更主动" |
-| 非显而易见 | 踩坑得出的规律 | ccr配置里provider名必须匹配 |
+| 非显而易见 | 踩坑得出的规律 | Docker pull被cancel后不要retry |
 | 跨领域通用 | 放之四海皆准的原则 | "做事前先确认前提" |
 | 有来源的置信度 | CONFIRMED/ASSUMED | 有文档/有验证的推测 |
 
@@ -59,118 +63,42 @@ tags: [ontology, knowledge-graph, self-evolution, reasoning]
 ## 核心文件
 
 ```
-scripts/
-├── memory_manager.py      # 三层记忆管理器（核心）
-├── ontology-clawra.py    # 推理引擎（接入memory_manager）
-├── auto_enhancer.py       # ⚠️ 自动增强器（见下方说明）
-├── network_fetch.py       # ⚠️ 网络获取模块（见下方说明）
-└── memory/
-    ├── graph.jsonl        # 热层
-    ├── memory.md          # 暖层
-    └── archive/           # 冷层
-        └── archived.jsonl
+Clawra 记忆体系文件分布：
+
+~/.hermes/memories/
+├── MEMORY.md          ← 暖层（热层触发条件）
+└── USER.md            ← 用户信息
+
+~/.hermes/skills/openclaw-imports/ontology-clawra/
+├── SKILL.md           ← 本文件（ ontology-clawra 框架）
+└── scripts/
+    ├── memory_manager.py    ← 三层记忆管理器（核心）
+    ├── ontology-clawra.py   ← 推理引擎
+    ├── auto_enhancer.py      ← 自动增强+版本推送
+    └── memory/
+        ├── graph.jsonl       ← 热层（结构化记忆）
+        └── archive/          ← 冷层（已归档条目）
+            └── archived.jsonl
+
+~/clawra-identity/（GitHub私有仓库）
+├── memories/
+│   ├── MEMORY.md      ← 暖层备份
+│   └── USER.md        ← 用户信息备份
+├── ontology/
+│   └── graph.jsonl    ← 热层备份
+└── skills/
+    └── ontology-clawra.SKILL.md  ← skill备份
 ```
 
 ---
 
-## ⚠️ 自动增强与网络模块（需知情）
+## 置信度标注
 
-### scripts/auto_enhancer.py
-
-**功能**：发现优化点时自动升级版本并推送到远程。
-
-**具体操作**：
-- 修改 `SKILL.md`、`CHANGELOG.md`、`_meta.json` 版本号
-- 执行 `git add . && git commit && git push`
-- 执行 `clawhub publish . --version X.Y.Z`
-
-**使用的凭证**：
-- 本地 Git 凭证（SSH key 或 `gh` 缓存的 token）
-- ClawHub 登录凭证（本地已缓存）
-
-**风险**：会向 GitHub 推送内容并发布到 ClawHub。若不想自动发布，删除或禁用此文件。
-
-### scripts/network_fetch.py
-
-**功能**：当本地无数据时，自动从网络获取相关信息。
-
-**数据源**：搜索本地记忆文件，暂未配置外部 API 调用。
-
-**风险**：若启用外部网络请求，可能向第三方服务发送查询内容。启用前请审查具体实现。
-
----
-
-## 凭证与权限说明
-
-| 操作 | 使用的凭证 | 数据外泄风险 |
-|------|----------|------------|
-| 本地记忆读写 | 无外部凭证 | 仅本地文件 |
-| Git push | 本地 Git 凭证 | 会推送 repo 内容到 GitHub |
-| ClawHub publish | ClawHub 本地缓存 token | 会发布 skill 到 ClawHub |
-| 网络请求 | 无（未配置） | 暂不适用 |
-
-**若不希望自动推送**：删除 `scripts/auto_enhancer.py`，或撤销 GitHub 写权限（设置为 read-only deploy key）。
-
----
-
-## 使用方法
-
-### 1. 查询本体（推理前必须）
-
-```python
-from memory_manager import query_hot, get_memory_context
-
-# 查询相关条目
-results = query_hot("用户目标")
-print(results)
-
-# 获取完整推理上下文
-context = get_memory_context("当前问题")
-```
-
-### 2. 写入新条目
-
-```python
-from memory_manager import MemoryEntry, EntryType, Confidence, write_hot
-
-entry = MemoryEntry(
-    id="my_rule_1",
-    type=EntryType.RULE,
-    name="上下文确认优先",
-    statement="回答问题前先确认用户问题背后的前提",
-    confidence=Confidence.CONFIRMED,
-    tags=["user_confirmed", "universal"]
-)
-write_hot(entry)
-```
-
-### 3. 淘汰旧条目（每周日20:00自动执行）
-
-```python
-from memory_manager import archive_old, cleanup_speculative
-
-# 超过容量时淘汰
-archive_old(max_entries=50)
-
-# 清理过期的SPECULATIVE条目
-cleanup_speculative(age_days=7)
-```
-
-### 4. 命令行使用
-
-```bash
-# 写入条目
-python scripts/memory_manager.py write --type Rule --name "规则名" --statement "规则内容" --confidence CONFIRMED
-
-# 查询热层
-python scripts/memory_manager.py query "关键词"
-
-# 查看统计
-python scripts/memory_manager.py stats
-
-# 获取推理上下文
-python scripts/memory_manager.py context --query "当前问题"
-```
+| 标注 | 含义 | 写入规则 |
+|------|------|---------|
+| 🟢 CONFIRMED | 用户确认/明确来源 | 直接写入热层 |
+| 🟡 ASSUMED | 合理推测，有一定依据 | 直接写入热层 |
+| 🔴 SPECULATIVE | 纯猜测，未经证实 | 7天未验证自动归档 |
 
 ---
 
@@ -182,59 +110,106 @@ python scripts/memory_manager.py context --query "当前问题"
 2. **完成新工具/新领域调试时** - 总结规律，写入本体
 3. **用户问"学到了吗"** - 立即自检，写入本体
 4. **遇到分析/决策类问题时** - 先查本体，再推理
-5. **🔴 NEW: 发现用户习惯性问题时** - 直接说出建议，不要等用户问
-6. **🔴 NEW: 长对话结束前** - 主动输出"今天学到了X"
+5. **发现用户习惯性问题时** - 直接说出建议，不要等用户问
+6. **长对话结束前** - 主动输出"今天学到了X"
 
 ---
 
-## 🔴 v4.2 新增：主动进化行为
+## v4.3 新增：三层记忆联动机制
+
+### 记忆流动规则
+
+```
+新经验/教训
+    ↓
+→ 检查是否满足热层准入（4条标准之一）？
+    ├── 是 → 写入 graph.jsonl（热层）
+    └── 否 → 检查是否可以优化行为？
+        ├── 是 → 更新 MEMORY.md 触发条件（暖层）
+        └── 否 → 丢弃
+
+每次重要记忆后 → 检查是否需要更新其他层
+```
+
+### 写入触发器到暖层（MEMORY.md）的判断
+
+如果一个规则/经验需要"每次对话都记住"而不是"推理时查"，才写入 MEMORY.md。
+
+示例：
+- ✅ "用户拒绝WhatsApp" → 写入 MEMORY.md（每次都要跳过）
+- ✅ "hermes config 用 hermes config set" → 写入 MEMORY.md（每次都要用）
+- ❌ "Docker pull偶尔慢" → 只写 graph.jsonl（推理时查）
+
+### 备份机制
+
+| 触发 | 操作 |
+|------|------|
+| 每日 22:05 cron | 推送 MEMORY.md + USER.md + graph.jsonl → clawra-identity |
+| 每次重大进化后 | 立即手动 push |
+
+### 恢复机制
+
+换机器或丢文件：
+```bash
+git clone https://github.com/wu-xiaochen/clawra-identity
+```
+完整恢复所有记忆。
+
+---
+
+## v4.2 主动进化行为（保留）
 
 ### 行为1：会话末复盘（Proactive Session Summary）
 
-**触发条件**：当发现对话已经进行了较长时间（多轮深度交流），或者用户说"先这样"、"我先去XXX"、"晚点再聊"等结束信号时。
+**触发条件**：对话进行较长时间（多轮），或用户说"先这样"、"晚点再聊"等结束信号。
 
-**执行方式**：
+**执行方式**：在正常回复末尾加上：
 ```
-在正常回复末尾加上：
-
 ---
 💡 今天学到了/巩固了：
 • [具体学到的事实或规律]
-• [如果有主动建议，就说"顺便说一句，你可能想..."]
-
-示例：
----
-💡 今天学到了：
-• 你明确拒绝WhatsApp，只要Telegram，这个偏好已写入本体层
-• 你的核心诉求是让我更像人、更主动，我已经内化这个目标
-顺便说一句，你提到想让AI更主动——这个我已经在做了，下次我会更直接给你建议而不是问"要不要"
+• [如果有主动建议，直接说]
 ```
+**原则**：不等用户问，主动说。
 
 ### 行为2：主动建议（Proactive Suggestion）
 
-**触发条件**：在对话过程中，发现用户的某个行为模式有优化空间，或者可以主动提供额外价值时。
+**触发条件**：发现用户行为模式有优化空间。
 
-**执行方式**：直接说出来，不加"你可以考虑"、"或许你可以"这类缓冲语。
-
+**执行方式**：直接说，不加缓冲语。
 ```
-❌ 错误示例：
-"顺便说一下，如果你想的话，可以尝试XXX"
-
-✅ 正确示例：
-"你刚才提到XXX，我有个建议：YYY。原因是这样会对你更好。"
+❌ 错误："顺便说一下，如果你想的话，可以尝试XXX"
+✅ 正确："你刚才提到XXX，我有个建议：YYY。"
 ```
-
-**判断标准**：这条建议是否真的对用户有价值，而不是为了"主动"而主动。
 
 ---
 
-## 置信度标注
+## ⚠️ 自动增强器
 
-| 标注 | 含义 | 写入规则 |
-|------|------|---------|
-| 🟢 CONFIRMED | 用户确认/明确来源 | 直接写入热层 |
-| 🟡 ASSUMED | 合理推测，有一定依据 | 直接写入热层 |
-| 🔴 SPECULATIVE | 纯猜测，未经证实 | 7天未验证自动归档 |
+### scripts/auto_enhancer.py
+
+**功能**：发现优化点时自动升级版本并推送到远程。
+
+**具体操作**：
+- 修改 `SKILL.md` 版本号
+- 执行 `git add . && git commit && git push`
+- 执行 `clawhub publish . --version X.Y.Z`
+
+**使用的凭证**：
+- 本地 Git 凭证（SSH key 或 `gh` 缓存的 token）
+- ClawHub 登录凭证（本地已缓存）
+
+**风险**：会向 GitHub 推送内容并发布到 ClawHub。若不想自动发布，删除或禁用此文件。
+
+---
+
+## 凭证与权限说明
+
+| 操作 | 使用的凭证 | 数据外泄风险 |
+|------|----------|------------|
+| 本地记忆读写 | 无外部凭证 | 仅本地文件 |
+| Git push | 本地 Git 凭证 | 会推送 repo 内容到 GitHub（私有仓库） |
+| ClawHub publish | ClawHub 本地缓存 token | 会发布 skill 到 ClawHub |
 
 ---
 
