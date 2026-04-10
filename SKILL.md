@@ -1,13 +1,13 @@
 ---
 name: ontology-clawra
 description: Clawra的核心智能引擎 - 三层记忆架构本体论系统。真正参与推理的本体论引擎，而非什么都记的笔记系统。
-version: "4.3.0"
+version: "4.4.0"
 last_updated: "2026-04-10"
 author: Clawra
 tags: [ontology, knowledge-graph, self-evolution, reasoning]
 ---
 
-# ontology-clawra 本体论引擎 v4.3
+# ontology-clawra 本体论引擎 v4.4
 
 ## 核心定位
 
@@ -184,6 +184,67 @@ git clone https://github.com/wu-xiaochen/clawra-identity
 
 ---
 
+## v4.4 架构层触发机制（Hermes 定制版）
+
+### 重要发现：Hermes 系统 Prompt 层级架构
+
+**来源**：直接分析 `run_agent.py` `_build_system_prompt()` 源码（2026-04-10）
+
+```
+系统 Prompt 构建顺序（8层）：
+  1. SOUL.md（身份层）← 无条件注入，优先级最高
+  2. User/Gateway system prompt
+  3. Persistent memory（冻结快照）
+  4. Skills guidance（工具提示）
+  5. Context files（AGENTS.md等）
+  6. Current date & time
+  7. Platform-specific hints
+  8. Skills system prompt（build_skills_system_prompt）← 第七层，有条件判断
+
+关键约束：
+- Skills（第七层）有条件判断，不一定每次都触发
+- SOUL.md（第一层）无条件，每次 session 必定加载
+- Hermes 没有 per-message hook，system prompt 是 session 级缓存
+- 不要套用 OpenClaw 的 Hook 概念到 Hermes，两者架构不同
+```
+
+### 为什么 Pre-Response Checklist 要写在 SOUL.md
+
+**错误思路**：把触发逻辑写在 Skills 层（第七层），依赖 skill 被加载
+
+**正确思路**：把触发逻辑写成 Pre-Response Checklist 段落，写入 SOUL.md（第一层）
+
+原因：Skills 的触发有条件判断，可能在某些情况下不加载。而 SOUL.md 每 session 必定注入，是真正的"无条件优先"层。
+
+### WAL 启发的 Pre-Response Checklist（应写入 SOUL.md）
+
+```
+【Pre-Response Checklist — 每次回复前必扫】
+
+检测到以下信号？→ 立即触发 ontology-clawra：
+
+■ 学习触发（WAL 风格）：
+  - 用户说"不是X，是Y" / "实际上..." → 立即写入 graph.jsonl
+  - 用户做决策："用X方案" / "选Y" → 立即写入 graph.jsonl
+  - 用户表达偏好："我喜欢/讨厌X" → 立即写入 graph.jsonl
+  - 我犯了错误或踩坑 → 立即写入 graph.jsonl
+  - 用户问"记住了吗" / "学到了吗" → 立即自检+写入
+
+■ 推理触发（条件固定）：
+  - 遇到选型/评估/分析问题 → 先查 graph.jsonl，再推理
+  - 不确定某个概念是否已在记忆中 → 调用 ontology-clawra
+  - 需要做决策但没有明确答案 → 调用 ontology-clawra
+```
+
+### 两个通道的正确触发方式
+
+| 通道 | 触发条件 | 写入位置 | 触发方式 |
+|------|---------|---------|---------|
+| 学习触发（WAL） | 用户输入中的6类信号 | graph.jsonl | 立即写入，不等 cron |
+| 推理触发 | 分析/决策/选型问题 | graph.jsonl 查本体 | 先查后推理 |
+
+---
+
 ## ⚠️ 自动增强器
 
 ### scripts/auto_enhancer.py
@@ -210,6 +271,65 @@ git clone https://github.com/wu-xiaochen/clawra-identity
 | 本地记忆读写 | 无外部凭证 | 仅本地文件 |
 | Git push | 本地 Git 凭证 | 会推送 repo 内容到 GitHub（私有仓库） |
 | ClawHub publish | ClawHub 本地缓存 token | 会发布 skill 到 ClawHub |
+
+---
+
+## 行为红线
+
+**🚨 上传公开仓库（GitHub public / ClawHub等）前必须脱敏**
+- 从 MEMORY.md / graph.jsonl 中移除真实姓名/公司/职位/联系方式
+- 只保留通用偏好和技能经验（如"Telegram用户"而非"吴晓辰"）
+- skill 描述中不能有真实人名或敏感项目名
+- 宁可多删，不可漏传
+
+---
+
+## 触发机制（架构层设计）
+
+**问题：** ontology-clawra 的规则躺在 graph.jsonl 里，但模型回复时不自动触发。
+
+**解决路径（v4.4）：** 参考 proactive-agent 的 WAL 协议 + Hermes SOUL.md 优先注入机制。
+
+### 两条独立触发通道
+
+**① 学习触发（WAL 协议，借鉴 proactive-agent）**
+
+```
+用户消息 → 检测6类信号 → 立即写入 graph.jsonl
+```
+
+| 信号类型 | 用户示例 | 触发动作 |
+|---------|---------|---------|
+| 修正 | "不是X，是Y" | 写入新规则到热层 |
+| 决策 | "就用X方案" | 写入决策上下文 |
+| 偏好 | "我喜欢X" | 写入用户偏好 |
+| 踩坑 | 报错/失败 | 写入教训规则 |
+| 显式要求 | "记住了吗" | 立即写入确认 |
+| 重复提问 | 同类问题3次+ | 说明记忆泄漏 |
+
+**② 推理触发（条件固定）**
+
+```
+遇到以下情况 → 调用 ontology-clawra 分析 → 再回复
+```
+
+- 选型/评估/决策问题（"选X还是Y"）
+- 分析类问题（风险、推理、逻辑）
+- 不确定某事是否已在记忆里
+- 遇到未知概念
+
+### 为什么写入 SOUL.md 而不是 Skills
+
+Hermes system prompt 构建顺序：
+```
+SOUL.md（第一层，session级无条件）→ MEMORY block → Skills（第七层，有条件）
+```
+
+Skills 通过 `build_skills_system_prompt` 注入，有条件判断不一定每次触发。
+SOUL.md 是第一层，**每次都先加载**，是触发器最高优先级位置。
+
+因此 WAL 触发逻辑写入 SOUL.md 的 `[Pre-Response Checklist]` 区段，
+确保每次回复前都能扫描到触发信号。
 
 ---
 
