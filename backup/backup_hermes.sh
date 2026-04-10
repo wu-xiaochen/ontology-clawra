@@ -12,6 +12,7 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 # 需要备份的文件/目录
 BACKUP_ITEMS=(
     "config.yaml"
+    ".env"
     "memories"
     "skills"
     "cron"
