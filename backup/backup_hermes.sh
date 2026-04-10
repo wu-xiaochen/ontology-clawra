@@ -1,6 +1,6 @@
 #!/bin/bash
-# Hermes 个人配置每日备份脚本
-# 备份到 wu-xiaochen/ontology-clawra/backup/
+# Hermes Skills 备份脚本
+# 备份到 wu-xiaochen/ontology-clawra（仅 skills，不含个人信息）
 
 set -e
 
@@ -9,18 +9,9 @@ BACKUP_DIR="$HOME/ontology-clawra/backup"
 GIT_DIR="$HOME/ontology-clawra"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
-# 需要备份的文件/目录
+# 需要备份的文件/目录（仅 skills，不含个人信息）
 BACKUP_ITEMS=(
-    "config.yaml"
-    ".env"
-    "memories"
     "skills"
-    "cron"
-    "hooks"
-    "channel_directory.json"
-    "gateway_state.json"
-    "gateway_voice_mode.json"
-    "SOUL.md"
 )
 
 cd "$GIT_DIR"
