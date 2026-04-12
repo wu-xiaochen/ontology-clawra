@@ -76,32 +76,38 @@ def update_changelog(new_version: str, changes: List[str]):
 
 def update_skill_md_version(new_version: str):
     """更新 SKILL.md 中的版本号"""
-    if SKILL_MD.exists():
-        content = SKILL_MD.read_text()
-        # 更新 metadata 中的版本
-        content = content.replace(
-            f'"version": "{get_current_version()}"',
-            f'"version": "{new_version}"'
-        )
-        content = content.replace(
-            f"version: {get_current_version()}",
-            f"version: {new_version}"
-        )
-        # 更新 last_updated
-        today = datetime.now().strftime("%Y-%m-%d")
-        import re
-        content = re.sub(
-            r'"last_updated": "\d{4}-\d{2}-\d{2}"',
-            f'"last_updated": "{today}"',
-            content
-        )
-        content = re.sub(
-            r"last_updated: \d{4}-\d{2}-\d{2}",
-            f"last_updated: {today}",
-            content
-        )
+    if not SKILL_MD.exists():
+        return
+
+    old_version = get_current_version()
+    content = SKILL_MD.read_text()
+    original = content
+
+    # 更新 YAML frontmatter 中的 version: "X.Y.Z" 或 version: X.Y.Z
+    import re
+
+    # 处理 "version": "X.Y.Z" 格式（带引号）
+    content = re.sub(
+        rf'^(\s*["\']?version["\']?\s*:\s*["\']?){re.escape(old_version)}(["\']?)$',
+        rf'\g<1>{new_version}\g<2>',
+        content,
+        flags=re.MULTILINE
+    )
+
+    # 更新 last_updated: "YYYY-MM-DD" 或 last_updated: YYYY-MM-DD
+    today = datetime.now().strftime("%Y-%m-%d")
+    content = re.sub(
+        r'^(\s*["\']?last_updated["\']?\s*:\s*["\']?)\d{4}-\d{2}-\d{2}(["\']?)$',
+        rf'\g<1>{today}\g<2>',
+        content,
+        flags=re.MULTILINE
+    )
+
+    if content != original:
         SKILL_MD.write_text(content)
-        print(f"📄 SKILL.md 已更新: v{new_version}")
+        print(f"📄 SKILL.md 已更新: v{old_version} → v{new_version}")
+    else:
+        print(f"⚠️ SKILL.md 版本替换失败（old={old_version}, new={new_version}），请手动检查")
 
 
 def git_commit_push(new_version: str) -> bool:
@@ -144,21 +150,31 @@ def git_commit_push(new_version: str) -> bool:
         return False
 
 
-def publish_clawhub() -> bool:
+def publish_clawhub(new_version: str = None) -> bool:
     """发布到 ClawHub"""
+    if new_version is None:
+        new_version = get_current_version()
+
     try:
-        # 使用 clawhub CLI 发布
+        # 使用 clawhub CLI 发布，必须带 --version 参数
         result = subprocess.run(
-            ["clawhub", "publish", CLAWHUB_SLUG],
+            ["clawhub", "publish", str(SKILL_DIR), "--version", new_version,
+             "--changelog", "自动增强发布"],
             cwd=SKILL_DIR,
             capture_output=True,
             text=True
         )
         if result.returncode == 0:
-            print(f"✅ ClawHub 发布成功: {CLAWHUB_SLUG}")
+            print(f"✅ ClawHub 发布成功: ontology-clawra@{new_version}")
             return True
         else:
-            print(f"⚠️ ClawHub 发布需要手动执行: clawhub publish {CLAWHUB_SLUG}")
+            stderr = result.stderr.strip()
+            if "Rate limit" in stderr:
+                print(f"⚠️ ClawHub Rate limit exceeded，稍后重试")
+            elif "502" in stderr or "Bad gateway" in stderr:
+                print(f"⚠️ ClawHub 服务端故障 (502)，稍后重试")
+            else:
+                print(f"⚠️ ClawHub 发布失败: {stderr[:200]}")
             return False
     except FileNotFoundError:
         print("⚠️ clawhub CLI 未找到，请手动发布")
@@ -474,10 +490,11 @@ def run_full_enhancement():
 
     # 4. Git 提交推送
     print("\n📦 提交到 GitHub...")
-    if git_commit_push(new_version):
-        # 5. 发布到 ClawHub
+    pushed = git_commit_push(new_version)
+    if pushed:
+        # 5. 发布到 ClawHub（失败不阻塞，因为 GitHub 已就绪）
         print("\n🌐 发布到 ClawHub...")
-        publish_clawhub()
+        publish_clawhub(new_version)
 
     print("\n" + "=" * 60)
     print(f"✅ ontology-clawra v{new_version} 增强完成!")
