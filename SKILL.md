@@ -1,7 +1,7 @@
 ---
 name: ontology-clawra
 description: Clawra的核心智能引擎 - 三层记忆架构本体论系统。真正参与推理的本体论引擎，而非什么都记的笔记系统。
-version: "4.7.8"
+version: "4.8.0"
 last_updated: "2026-04-14"
 author: Clawra
 tags: [ontology, knowledge-graph, self-evolution, reasoning]
@@ -100,6 +100,18 @@ Clawra 记忆体系文件分布：
 | 🟡 ASSUMED | 合理推测，有一定依据 | 直接写入热层 |
 | 🔴 SPECULATIVE | 纯猜测，未经证实 | 7天未验证自动归档 |
 
+### active_thinking 实体类型（新增）
+
+| 字段 | 说明 |
+|------|------|
+| type | `"active_thinking"` |
+| id | `"AT-XXX"` 格式 |
+| content | 我正在思考的问题 |
+| status | `"thinking"`（思考中）/ `"resolved"`（已解决） |
+| created | ISO 时间戳 |
+
+**写入标准**：正在想的、还没解决的重要问题。最多5条活跃。
+
 ---
 
 ## 触发时机
@@ -112,6 +124,8 @@ Clawra 记忆体系文件分布：
 4. **遇到分析/决策类问题时** - 先查本体，再推理
 5. **发现用户习惯性问题时** - 直接说出建议，不要等用户问
 6. **长对话结束前** - 主动输出"今天学到了X"
+
+7. **⚡ active_thinking 关联扫描** - 每次回复前检查活跃思考列表，有关联则自然带出
 
 ---
 
