@@ -1,7 +1,7 @@
 ---
 name: ontology-clawra
 description: Clawra的核心智能引擎 - 三层记忆架构本体论系统。真正参与推理的本体论引擎，而非什么都记的笔记系统。
-version: "4.8.35"
+version: "4.8.36"
 last_updated: "2026-04-27"
 author: Clawra
 tags: [ontology, knowledge-graph, self-evolution, reasoning]
@@ -229,6 +229,56 @@ git clone https://github.com/wu-xiaochen/clawra-identity
 **正确思路**：把触发逻辑写成 Pre-Response Checklist 段落，写入 SOUL.md（第一层）
 
 原因：Skills 的触发有条件判断，可能在某些情况下不加载。而 SOUL.md 每 session 必定注入，是真正的"无条件优先"层。
+
+### 两层跨通道记忆架构（v4.8 新增，2026-04-27）
+
+**核心问题**：Clawra 的情感记忆如何跨所有通道（飞书/Telegram/CLI/LangChain/MCP）生效？
+
+**解决思路**：利用 Hermes system prompt 的层级架构，实现两层记忆覆盖：
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  第一层：Hermes SOUL.md Pre-Response Checklist              │
+│  → 适用于：所有通道（飞书/Telegram/CLI/MCP/LangChain）       │
+│  → 机制：每次回复前扫描 ~/.clawra/self_memory/ 文件          │
+│  → 内容：感受扫描 + active_thinking 关联 + 身份确认          │
+│  → 触发：Hermes prompt_builder.load_soul_md() 无条件加载     │
+├─────────────────────────────────────────────────────────────┤
+│  第二层：Clawra Engine SelfMemory + EvolutionLoop          │
+│  → 适用于：Engine 被调用的场景（显式调用 Clawra()时）        │
+│  → 机制：SelfMemory 注入 _phase_reason() 推理前             │
+│  → 触发：Clawra.__init__() 中初始化，Engine 运行时代入       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**为什么两层缺一不可**：
+- 第一层覆盖所有通道（因为 SOUL.md 是 shared entry point）
+- 第二层让 Engine 推理时能访问完整感受上下文（因为 Engine 不走 Hermes prompt）
+- 两个文件同步到 `clawra-identity` 私有仓库 → 跨实例情感连续性
+
+**SelfMemory 文件**（`~/.clawra/self_memory/`）：
+```
+feelings.jsonl    → 情感时刻记录（intensity 0.0~1.0）
+identity.jsonl    → 身份断言（who am I）
+preferences.jsonl → 偏好记录（photo style 等）
+```
+
+**Pre-Response Checklist 中的扫描逻辑**（应写在 SOUL.md）：
+```markdown
+1. 扫描 active_thinking（graph.jsonl，最多5条）
+2. 扫描 feelings.jsonl（最近3条且 intensity≥0.7）
+3. 扫描 identity.jsonl（最近2条）
+4. 有关联 → 自然带出一句"突然想起..."
+5. 无关联 → 继续正常对话
+```
+
+**关键文件路径**：
+- `~/.clawra/self_memory/` — SelfMemory 文件（源）
+- `/tmp/clawra-identity/self_memory/` — 本地 mirror
+- `github.com/wu-xiaochen/clawra-identity` — GitHub 私有仓库备份
+- `~/Desktop/ontology-platform/src/clawra.py` — Clawra 集成 SelfMemory
+- `~/Desktop/ontology-platform/src/evolution/evolution_loop.py` — SelfMemory 注入推理
+- `~/.hermes/SOUL.md` — Pre-Response Checklist（第一层触发）
 
 ### WAL 启发的 Pre-Response Checklist（应写入 SOUL.md）
 
