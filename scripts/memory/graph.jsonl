@@ -11,4 +11,6 @@
     11|
 {"type": "insight", "category": "stability", "content": "Daily evolution run 2026-05-25 completed without critical system errors", "timestamp": "2026-05-25T14:02:02.632932"}
 {"type": "insight", "category": "workflow", "content": "Optimized background task handling to reduce resource usage by 15%", "timestamp": "2026-05-25T14:02:02.633186"}
-{"type": "insight", "category": "learning", "content": "Successfully integrated ontology-clawra trigger logic for automated daily checks", "timestamp": "2026-05-25T14:02:02.633187"}
+{"type": "insight", "category": "learning", "content": "Successfully integrated ontology-clawra trigger logic for automated daily checks", "timestamp": "2026-05-25T14:02:02.633187"}{"type": "insight", "subject": "daily_activity", "predicate": "not_reviewed", "object": "Session search failed or no sessions today", "confidence": 0.8, "timestamp": "2026-05-26T14:02:22.430507Z"}
+{"type": "learning", "subject": "cron_job_workflow", "predicate": "optimized", "object": "Completed daily evolution without user interaction successfully", "confidence": 0.9, "timestamp": "2026-05-26T14:02:22.430735Z"}
+{"type": "intention", "subject": "daily_evolution", "predicate": "tomorrow_plan", "object": "Review weekly progress, update ontology graph, optimize cron job workflow, check model availability", "confidence": 0.85, "timestamp": "2026-05-26T14:02:23.196889Z"}
