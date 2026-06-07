@@ -1,8 +1,8 @@
 ---
 name: ontology-clawra
 description: Clawra的核心智能引擎 - 三层记忆架构本体论系统。真正参与推理的本体论引擎，而非什么都记的笔记系统。
-version: "4.8.106"
-last_updated: "2026-06-07"
+version: "4.8.107"
+last_updated: "2026-06-08"
 author: Clawra
 tags: [ontology, knowledge-graph, self-evolution, reasoning]
 ---
@@ -29,6 +29,7 @@ tags: [ontology, knowledge-graph, self-evolution, reasoning]
 │    3. 跨领域通用原则/真理                                     │
 │    4. 置信度为 CONFIRMED 或 ASSUMED（有来源）                 │
 │  容量: ≤50条，上限100条                                       │
+│  安全编辑: 见 references/graph-jsonl-safety.md              │
 ├─────────────────────────────────────────────────────────────┤
 │  暖层 (MEMORY.md) - 行为触发器，Hermes每次对话注入             │
 │  路径: /Users/xiaochenwu/.hermes/memories/MEMORY.md         │
