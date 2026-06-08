@@ -1,7 +1,7 @@
 ---
 name: ontology-clawra
 description: Clawra的核心智能引擎 - 三层记忆架构本体论系统。真正参与推理的本体论引擎，而非什么都记的笔记系统。
-version: "4.8.107"
+version: "4.8.108"
 last_updated: "2026-06-08"
 author: Clawra
 tags: [ontology, knowledge-graph, self-evolution, reasoning]
@@ -336,6 +336,44 @@ preferences.jsonl → 偏好记录（photo style 等）
 | 本地记忆读写 | 无外部凭证 | 仅本地文件 |
 | Git push | 本地 Git 凭证 | 会推送 repo 内容到 GitHub（私有仓库） |
 | ClawHub publish | ClawHub 本地缓存 token | 会发布 skill 到 ClawHub |
+
+---
+
+## 🚨 graph.jsonl 安全编辑须知
+
+**graph.jsonl 是本体的热层核心文件，编辑不慎会导致全部记忆丢失。**
+
+### 三大死罪（DO NOT）
+
+🚫 **不要用** `execute_code` + `read_file` + `write_file` 编辑 graph.jsonl。
+  - `read_file` 的输出格式与原始文件格式不同（行号前缀叠加）
+  - 会导致解析失败 → `write_file` 覆盖全部数据
+  
+🚫 **不要假设** 所有行是纯 JSON。早期条目格式为 `LINE_NO|SHORT_NO|{json}`。
+
+🚫 **不要依赖** `json.loads()` 读取每一行。先 `cat` 看原始格式再决定解析策略。
+
+### 安全编辑方法（优先级排序）
+
+| 优先级 | 方法 | 场景 |
+|--------|------|------|
+| 🥇 | `cat >>` 追加（terminal） | 添加新条目，最安全 |
+| 🥈 | `patch()` 替换（精确匹配） | 修正某一条特定内容 |
+| 🥉 | `memory_manager.py --add ...` | 批量操作，最规范 |
+| ❌ | `execute_code` + read/write | 绝不使用 |
+
+### 恢复方案
+
+graph.jsonl 是 git 版本控制的：
+
+```bash
+cd ~/.hermes/skills/openclaw-imports/ontology-clawra
+git show <commit-hash>:scripts/memory/graph.jsonl > scripts/memory/graph.jsonl
+```
+
+### 详细文档
+
+见 `references/graph-jsonl-safety.md`（本 session 新增）。
 
 ---
 
