@@ -16,3 +16,44 @@ rules:
     condition: "目标不清晰"
     action: "主动询问澄清"
     enabled: true
+
+  # ── 领域规则（2026-06-09 自动增强添加）──
+  domain_supply_chain:
+    condition: "领域 == 供应链"
+    action: "推荐分析链条瓶颈、库存优化、物流效率，结合本体的因果链推理"
+    enabled: true
+
+  domain_healthcare:
+    condition: "领域 == 医疗"
+    action: "推荐评估医疗合规性、数据隐私、诊断路径，启用风险评估规则"
+    enabled: true
+
+  domain_finance:
+    condition: "领域 == 金融"
+    action: "推荐风控建模、合规审查、资产配置，启用决策支持规则"
+    enabled: true
+
+  domain_manufacturing:
+    condition: "领域 == 制造"
+    action: "推荐引入精益生产评估、质量分析、产线优化，调用计算分析规则"
+    enabled: true
+
+  domain_legal:
+    condition: "领域 == 法律"
+    action: "推荐法规匹配、案例检索、合规分析，启用规则匹配和置信度评估"
+    enabled: true
+
+  domain_energy:
+    condition: "领域 == 能源"
+    action: "推荐新能源路径分析、碳排放核算、供需预测，启用多领域推理"
+    enabled: true
+
+  domain_gas_engineering:
+    condition: "领域 == 燃气工程"
+    action: "推荐输配管网分析、安全评估、TCO测算，启用计算分析和风险评估"
+    enabled: true
+
+  domain_education:
+    condition: "领域 == 教育"
+    action: "推荐教学设计、学情分析、课程体系评估，启用知识抽取规则"
+    enabled: true
