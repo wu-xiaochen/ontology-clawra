@@ -74,30 +74,45 @@ def update_changelog(new_version: str, changes: List[str]):
     print(f"📝 CHANGELOG.md 已更新: v{new_version}")
 
 
+def _detect_skill_md_version() -> Optional[str]:
+    """从 SKILL.md 中检测实际版本号（应对版本漂移）"""
+    import re
+    content = SKILL_MD.read_text()
+    match = re.search(r'^version:\s*"(\d+\.\d+\.\d+)"', content, re.MULTILINE)
+    return match.group(1) if match else None
+
+
 def update_skill_md_version(new_version: str):
-    """更新 SKILL.md 中的版本号"""
+    """更新 SKILL.md 中的版本号
+
+    改进（2026-06-11）：先检测 SKILL.md 中实际的版本号再替换，
+    解决版本漂移导致旧版本字符串不匹配的问题。
+    """
     if not SKILL_MD.exists():
         return
 
-    old_version = get_current_version()
     content = SKILL_MD.read_text()
     original = content
-
-    # 更新 YAML frontmatter 中的 version: "X.Y.Z" 或 version: X.Y.Z
     import re
 
-    # 处理 "version": "X.Y.Z" 格式（带引号）
+    # 关键修复：检测 SKILL.md 中实际的版本号，而非信任 _meta.json
+    actual_version = _detect_skill_md_version()
+    old_version = actual_version if actual_version else get_current_version()
+    if actual_version and actual_version != get_current_version():
+        print(f"检测到版本漂移: SKILL.md={actual_version}, _meta.json={get_current_version()}，使用 SKILL.md 中的实际版本")
+
+    # 更新 YAML frontmatter 中的 version: "X.Y.Z"
     content = re.sub(
-        rf'^(\s*["\']?version["\']?\s*:\s*["\']?){re.escape(old_version)}(["\']?)$',
+        rf'^(version:\s*"){re.escape(old_version)}(")$',
         rf'\g<1>{new_version}\g<2>',
         content,
         flags=re.MULTILINE
     )
 
-    # 更新 last_updated: "YYYY-MM-DD" 或 last_updated: YYYY-MM-DD
+    # 更新 last_updated
     today = datetime.now().strftime("%Y-%m-%d")
     content = re.sub(
-        r'^(\s*["\']?last_updated["\']?\s*:\s*["\']?)\d{4}-\d{2}-\d{2}(["\']?)$',
+        r'^(last_updated:\s*")\d{4}-\d{2}-\d{2}(")$',
         rf'\g<1>{today}\g<2>',
         content,
         flags=re.MULTILINE
@@ -105,9 +120,21 @@ def update_skill_md_version(new_version: str):
 
     if content != original:
         SKILL_MD.write_text(content)
-        print(f"📄 SKILL.md 已更新: v{old_version} → v{new_version}")
+        print(f"SKILL.md 已更新: v{old_version} -> v{new_version}")
     else:
-        print(f"⚠️ SKILL.md 版本替换失败（old={old_version}, new={new_version}），请手动检查")
+        print(f"SKILL.md 版本替换失败，尝试强制替换版本号...")
+        # 兜底：替换 frontmatter 中第一个版本号字符串
+        force_content = re.sub(
+            r'(\d+\.\d+\.\d+)',
+            new_version,
+            original,
+            count=1
+        )
+        if force_content != original:
+            SKILL_MD.write_text(force_content)
+            print(f"SKILL.md 强制更新: -> v{new_version}")
+        else:
+            print(f"SKILL.md 版本更新彻底失败，请手动更新 version 字段")
 
 
 def git_commit_push(new_version: str) -> bool:
