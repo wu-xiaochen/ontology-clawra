@@ -1,7 +1,7 @@
 ---
 name: ontology-clawra
 description: Clawra的核心智能引擎 - 三层记忆架构本体论系统。真正参与推理的本体论引擎，而非什么都记的笔记系统。
-version: "4.9.10"
+version: "4.9.11"
 last_updated: "2026-07-22"
 author: Clawra
 tags: [ontology, knowledge-graph, self-evolution, reasoning]
