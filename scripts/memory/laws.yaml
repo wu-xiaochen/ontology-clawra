@@ -50,3 +50,84 @@ laws:
     effects:
       - "触发自我进化"
       - "更新知识网络"
+
+  # ── 领域法则（2026-10-14 进化夜添加，消化 auto_enhancer 9项建议）──
+  law_domain_supply_chain:
+    name: "供应链领域法则"
+    domain: "供应链"
+    statement: "供应链优化的核心是找出瓶颈环节，局部最优不等于全局最优"
+    conditions:
+      - "分析对象为采购/物流/库存等多环节链路"
+    effects:
+      - "先做瓶颈定位再做优化建议"
+      - "结合因果链推理评估全局影响"
+
+  law_domain_medical:
+    name: "医疗领域法则"
+    domain: "医疗"
+    statement: "医疗决策先核合规与数据隐私，再谈方案效率"
+    conditions:
+      - "涉及诊疗路径或医疗数据处理"
+    effects:
+      - "前置合规性审查"
+      - "启用风险评估规则"
+
+  law_domain_finance:
+    name: "金融领域法则"
+    domain: "金融"
+    statement: "金融分析先风控后收益，任何收益评估之前置合规审查"
+    conditions:
+      - "涉及资产、投资或资金决策"
+    effects:
+      - "先输出风险敞口再输出收益预期"
+      - "启用决策支持规则"
+
+  law_domain_manufacturing:
+    name: "制造领域法则"
+    domain: "制造"
+    statement: "制造改进以质量数据为依据，精益评估先于产线投资"
+    conditions:
+      - "涉及生产、质检或产线改造"
+    effects:
+      - "先做质量数据分析"
+      - "调用计算分析规则量化收益"
+
+  law_domain_legal:
+    name: "法律领域法则"
+    domain: "法律"
+    statement: "法律问题先检索现行法规与先例，再构建推理链"
+    conditions:
+      - "涉及法规、合同或纠纷分析"
+    effects:
+      - "法规检索优先于经验推理"
+      - "启用规则匹配和置信度评估"
+
+  law_domain_energy:
+    name: "能源领域法则"
+    domain: "能源"
+    statement: "能源决策需同时核算碳排放与供需平衡"
+    conditions:
+      - "涉及能源结构、新能源或能耗分析"
+    effects:
+      - "双维度并行核算"
+      - "启用多领域推理"
+
+  law_domain_gas:
+    name: "燃气工程领域法则"
+    domain: "燃气工程"
+    statement: "燃气工程以安全规范为最高约束，任何效率优化不得突破安全边界"
+    conditions:
+      - "涉及燃气设施、管网或供气方案"
+    effects:
+      - "安全规范一票否决"
+      - "效率与安全冲突时默认安全"
+
+  law_domain_education:
+    name: "教育领域法则"
+    domain: "教育"
+    statement: "教育方案需兼顾教学效果与学习者负担，强度指标不单独作为优化目标"
+    conditions:
+      - "涉及课程、培训或学习路径设计"
+    effects:
+      - "效果与负担双指标评估"
+      - "推荐分阶段方案"

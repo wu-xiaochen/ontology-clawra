@@ -57,3 +57,9 @@ rules:
     condition: "领域 == 教育"
     action: "推荐教学设计、学情分析、课程体系评估，启用知识抽取规则"
     enabled: true
+
+  # ── 推理规则补充（2026-10-14 进化夜添加，消化 auto_enhancer 建议）──
+  reasoning_selection_analysis:
+    condition: "任务 == 选型分析"
+    action: "按 候选并列 → 维度加权 → 置信度评估 三步推理，输出对比矩阵与推荐理由"
+    enabled: true
